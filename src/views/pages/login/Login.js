@@ -30,7 +30,7 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    axios.get('https://solgacomserver.herokuapp.com//api/users/email/' + email).then((resp) => {
+    axios.get('https://solgacomserver.herokuapp.com/api/users/email/' + email).then((resp) => {
       let passwordResponse = resp.data[0].password
 
       if (passwordResponse == password) {
