@@ -58,7 +58,7 @@ const Register = () => {
               first_name: firstName,
               last_name: lastName,
               email: email,
-              function: functionName,
+              fonction: functionName,
               icon_path: '',
               id_account: dataAccount.data,
               last_modification: dateFormat(new Date(), 'isoDateTime'),
