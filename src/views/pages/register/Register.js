@@ -38,7 +38,7 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     axios
-      .post('http://localhost:5000/api/accounts', {
+      .post('https://solgacomserver.herokuapp.com//api/accounts', {
         nb_employees: employeesNumber,
         society_name: societyName,
         status: status,
@@ -54,7 +54,7 @@ const Register = () => {
           let dataAccount = response.data
 
           axios
-            .post('http://localhost:5000/api/contacts', {
+            .post('https://solgacomserver.herokuapp.com//api/contacts', {
               first_name: firstName,
               last_name: lastName,
               email: email,
@@ -67,7 +67,7 @@ const Register = () => {
             .then(function (response) {
               if (response.status == 200) {
                 axios
-                  .post('http://localhost:5000/api/users', {
+                  .post('https://solgacomserver.herokuapp.com//api/users', {
                     username: email,
                     password: password,
                     id_profile: 1,
