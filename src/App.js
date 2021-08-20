@@ -20,7 +20,7 @@ const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <HashRouter>
         <React.Suspense fallback={loading}>
           <Switch>
             <Route exact path="/" name="Login Page" render={(props) => <Login {...props} />} />
@@ -35,7 +35,7 @@ class App extends Component {
             <Route path="/dashboard" name="Home" render={(props) => <DefaultLayout {...props} />} />
           </Switch>
         </React.Suspense>
-      </BrowserRouter>
+      </HashRouter>
     )
   }
 }
