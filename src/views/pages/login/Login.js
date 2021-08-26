@@ -24,18 +24,45 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    if (sessionStorage.getItem('user')) sessionStorage.removeItem('user')
+    if (sessionStorage.getItem('user')) {
+      sessionStorage.removeItem('user')
+      sessionStorage.removeItem('contact')
+      sessionStorage.removeItem('account')
+      sessionStorage.removeItem('currentSite')
+    }
   }, [])
 
   const handleLogin = (e) => {
     e.preventDefault()
 
-    axios.get('https://solgacomserver.herokuapp.com/api/users/email/' + email).then((resp) => {
-      let passwordResponse = resp.data[0].password
+    axios.get(process.env.REACT_APP_ENDPOINT + '/api/users/email/' + email).then((resp) => {
+      let user = resp.data[0]
+      let passwordResponse = user.password
 
       if (passwordResponse == password) {
-        sessionStorage.setItem('user', JSON.stringify(resp.data[0]))
-        history.push('/dashboard')
+        sessionStorage.setItem('user', JSON.stringify(user))
+
+        axios
+          .get(process.env.REACT_APP_ENDPOINT + '/api/contacts/email/' + user.username)
+          .then((resp) => {
+            let contact = resp.data[0]
+            sessionStorage.setItem('contact', JSON.stringify(contact))
+
+            axios
+              .get(process.env.REACT_APP_ENDPOINT + '/api/accounts/id/' + contact.id_account)
+              .then((resp) => {
+                let account = resp.data[0]
+                sessionStorage.setItem('account', JSON.stringify(account))
+
+                axios
+                  .get(process.env.REACT_APP_ENDPOINT + '/api/profiles/id/' + account.profile_id)
+                  .then((resp) => {
+                    let profile = resp.data[0]
+                    sessionStorage.setItem('profile', JSON.stringify(profile))
+                    history.push('/dashboard')
+                  })
+              })
+          })
       } else {
         console.log('Email or Password Incorrect')
       }

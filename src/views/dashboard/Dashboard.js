@@ -30,7 +30,12 @@ const Dashboard = () => {
   let history = useHistory()
   useEffect(() => {
     if (!sessionStorage.getItem('user')) history.push('/')
-    else console.log(sessionStorage.getItem('user'))
+    else {
+      console.log('User: ' + sessionStorage.getItem('user'))
+      console.log('Contact: ' + sessionStorage.getItem('contact'))
+      console.log('Account: ' + sessionStorage.getItem('account'))
+      console.log('Profile: ' + sessionStorage.getItem('profile'))
+    }
   }, [])
 
   const random = (min, max) => {

@@ -17,22 +17,22 @@ const _nav = [
 
   {
     _component: 'CNavTitle',
-    anchor: 'Connection',
+    anchor: 'Site',
   },
 
   {
     _component: 'CNavItem',
     as: NavLink,
-    anchor: 'Keys',
-    to: '/dashboard/connection/generatekeys',
+    anchor: 'Create Site',
+    to: '/dashboard/site/create',
     icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
   },
 
   {
     _component: 'CNavItem',
     as: NavLink,
-    anchor: 'Code',
-    to: '/dashboard/connection/code',
+    anchor: 'Manage Sites',
+    to: '/dashboard/site/manage',
     icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
   },
 
@@ -46,6 +46,47 @@ const _nav = [
     as: NavLink,
     anchor: 'Create Notification',
     to: '/dashboard/notification/create',
+    icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
+  },
+  {
+    _component: 'CNavTitle',
+    anchor: 'Users',
+  },
+
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Create User',
+    to: '/dashboard/user/create',
+    icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
+  },
+
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Manage Users',
+    to: '/dashboard/user/manage',
+    icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
+  },
+
+  {
+    _component: 'CNavTitle',
+    anchor: 'Profile',
+  },
+
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Create Profile',
+    to: '/dashboard/profile/create',
+    icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
+  },
+
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Manage Profiles',
+    to: '/dashboard/profile/manage',
     icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
   },
 ]

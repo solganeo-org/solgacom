@@ -49,28 +49,18 @@ const AppHeaderDropdown = () => {
           </CBadge>
         </CDropdownItem>
         <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
-        <CDropdownItem href="#">
-          <CIcon name="cil-user" className="me-2" />
-          Profile
-        </CDropdownItem>
-        <CDropdownItem href="#">
+        <Link to="/dashboard/profile">
+          <CDropdownItem>
+            <CIcon name="cil-user" className="me-2" />
+            Profile
+          </CDropdownItem>
+        </Link>
+
+        <CDropdownItem href="/dashboard/settings">
           <CIcon name="cil-settings" className="me-2" />
           Settings
         </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon name="cil-credit-card" className="me-2" />
-          Payments
-          <CBadge color="secondary" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
-        <CDropdownItem href="#">
-          <CIcon name="cil-file" className="me-2" />
-          Projects
-          <CBadge color="primary" className="ms-2">
-            42
-          </CBadge>
-        </CDropdownItem>
+
         <CDropdownDivider />
         <Link to="/">
           <CDropdownItem>

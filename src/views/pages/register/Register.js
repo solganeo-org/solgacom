@@ -26,7 +26,6 @@ const Register = () => {
   const [societyName, setSocietyName] = useState('')
   const [siret, setSiret] = useState('')
   const [functionName, setFunctionName] = useState('')
-  const [status, setStatus] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [employeesNumber, setEmployeesNumber] = useState('')
   const [country, setCountry] = useState('')
@@ -38,10 +37,9 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     axios
-      .post('https://solgacomserver.herokuapp.com/api/accounts', {
+      .post(process.env.REACT_APP_ENDPOINT + '/api/accounts', {
         nb_employees: employeesNumber,
         society_name: societyName,
-        status: status,
         siret: siret,
         country: country,
         phone_number: phoneNumber,
@@ -54,7 +52,7 @@ const Register = () => {
           let dataAccount = response.data
 
           axios
-            .post('https://solgacomserver.herokuapp.com/api/contacts', {
+            .post(process.env.REACT_APP_ENDPOINT + '/api/contacts', {
               first_name: firstName,
               last_name: lastName,
               email: email,
@@ -67,10 +65,10 @@ const Register = () => {
             .then(function (response) {
               if (response.status == 200) {
                 axios
-                  .post('https://solgacomserver.herokuapp.com/api/users', {
+                  .post(process.env.REACT_APP_ENDPOINT + '/api/users', {
                     username: email,
                     password: password,
-                    id_profile: 1,
+                    id_profile: 0,
                     active: 1,
                   })
                   .then(function (response) {
@@ -165,18 +163,6 @@ const Register = () => {
                       placeholder="Function"
                       autoComplete="function"
                       onChange={(e) => setFunctionName(e.target.value)}
-                    ></CFormControl>
-                  </CInputGroup>
-
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon name="cil-user" />
-                    </CInputGroupText>
-
-                    <CFormControl
-                      placeholder="Status"
-                      autoComplete="status"
-                      onChange={(e) => setStatus(e.target.value)}
                     ></CFormControl>
                   </CInputGroup>
 
