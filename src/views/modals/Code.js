@@ -30,7 +30,8 @@ const Code = (props) => {
                   onClick={(e) =>
                     handleDownload(
                       e,
-                      `let idSite = ${props.idSite}
+                      `
+                      let idSite = ${props.idSite}
 
                       function urlB64ToUint8Array(base64String) { 
                         
@@ -83,7 +84,7 @@ const Code = (props) => {
 
                                   (async () => {
                                       
-                                      fetchAPI(${process.env.REACT_APP_ENDPOINT}/api/clients', {
+                                      fetchAPI('${process.env.REACT_APP_ENDPOINT}/api/clients', {
                       
                                         endpoint: subscriptionObject.endpoint, 
                                         key_auth: subscriptionObject.keys.auth,
@@ -97,7 +98,7 @@ const Code = (props) => {
                       
                                           let idClient = resp.data
                       
-                                          fetchAPI('http://localhost:5000/api/sites-clients', {
+                                          fetchAPI('${process.env.REACT_APP_ENDPOINT}/api/sites-clients', {
                       
                                             id_site: idSite,
                                             id_client: idClient,
