@@ -12,9 +12,11 @@ import {
   CInputGroup,
   CFormControl,
 } from '@coreui/react'
+import AmazonS3Connection from 'src/js/amazonS3'
 
 const axios = require('axios')
 const webpush = require('web-push')
+const { v4: uuidv4 } = require('uuid')
 
 const CreateSite = () => {
   const [name, setName] = useState('')
@@ -27,8 +29,10 @@ const CreateSite = () => {
     // Generate VAPID KEYS
     const vapidKeys = webpush.generateVAPIDKeys()
 
-    // Add Site to the Database
+    //Generate File i Amazon Bucket
+    const newId = uuidv4()
 
+    // Add Site to the Database
     axios
       .post(process.env.REACT_APP_ENDPOINT + '/api/sites', {
         name: name,
@@ -37,30 +41,53 @@ const CreateSite = () => {
         iconPath: '',
         private_key: vapidKeys.privateKey,
         public_key: vapidKeys.publicKey,
+        url_amazon: '',
         active: '1',
       })
       .then(function (response) {
         if (response.status == 200) {
-          // Add Contact as Creator
-
-          console.log(response)
           let site = response.data
 
-          axios
-            .post(process.env.REACT_APP_ENDPOINT + '/api/sites-contacts', {
-              id_site: site.data,
-              id_contact: contact.id,
-              active: 1,
-            })
-            .then(function (response) {
-              if (response.status == 200) {
-                console.log('Added')
-                window.location.reload()
-              }
-            })
+          let data = {
+            idSite: site.data,
+            publicKey: vapidKeys.publicKey,
+            privateKey: vapidKeys.privateKey,
+          }
+
+          AmazonS3Connection.upload('webpush_' + newId + '.js', data, function (url_amazon) {
+            console.log(url_amazon)
+            console.log(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data)
+
+            axios
+              .put(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data, {
+                name: name,
+                url: url,
+                domain: domain,
+                iconPath: '',
+                private_key: vapidKeys.privateKey,
+                public_key: vapidKeys.publicKey,
+                url_amazon: url_amazon,
+                active: '1',
+              })
+              .then(function (response) {
+                // Add Contact as Creator
+                axios
+                  .post(process.env.REACT_APP_ENDPOINT + '/api/sites-contacts', {
+                    id_site: site.data,
+                    id_contact: contact.id,
+                    active: 1,
+                  })
+                  .then(function (response) {
+                    if (response.status == 200) {
+                      window.location.reload()
+                    }
+                  })
+              })
+          })
         }
       })
   }
+
   return (
     <>
       <CCard>

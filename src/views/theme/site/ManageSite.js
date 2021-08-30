@@ -15,8 +15,7 @@ const ManageSite = () => {
   const contact = JSON.parse(sessionStorage.getItem('contact'))
   const [sites, setSites] = useState([])
   const [show, setShow] = useState(false)
-  const [publicKey, setPublicKey] = useState('')
-  const [idSite, setIdSite] = useState('')
+  const [urlAmazon, setUrlAmazon] = useState('')
 
   const handleShow = () => setShow(true)
 
@@ -32,15 +31,14 @@ const ManageSite = () => {
         private_key: site.private_key,
         public_key: site.public_key,
         active: site.active,
+        url_amazon: site.url_amazon,
       },
     ])
   }
 
   const handleSeeCode = (e) => {
-    let key = e.target.parentNode.getAttribute('id')
-    let id = e.target.parentNode.getAttribute('idSite')
-    setPublicKey(key)
-    setIdSite(id)
+    let url_amazon = e.target.parentNode.getAttribute('url_amazon')
+    setUrlAmazon(url_amazon)
     handleShow()
   }
 
@@ -52,7 +50,6 @@ const ManageSite = () => {
         resp.data.forEach((site) => handleAddNewSite(site))
       })
   }, []) // <-- empty dependency array
-
   return (
     <>
       <CCard className="mb-4">
@@ -84,8 +81,7 @@ const ManageSite = () => {
                   <Button
                     size="small"
                     color="primary"
-                    id={name.public_key}
-                    idSite={name.id}
+                    url_amazon={name.url_amazon}
                     onClick={handleSeeCode}
                   >
                     See Code
@@ -97,7 +93,7 @@ const ManageSite = () => {
         </CCardBody>
       </CCard>
 
-      <Code show={show} onChange={setShow} publicKey={publicKey} idSite={idSite} />
+      <Code show={show} onChange={setShow} url_amazon={urlAmazon} />
     </>
   )
 }

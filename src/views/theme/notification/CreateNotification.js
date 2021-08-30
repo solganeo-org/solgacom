@@ -12,6 +12,7 @@ import {
   CInputGroup,
   CFormControl,
 } from '@coreui/react'
+import AmazonS3Connection from 'src/js/amazonS3'
 
 const webPush = require('web-push')
 const axios = require('axios')
@@ -68,8 +69,10 @@ const Notification = () => {
       icon: 'https://drive.google.com/file/d/1HPH-xIeDWhUB9O2-Fc6anfPU-QdeYPJk/view?usp=sharing',
     })
 
+    console.log('@@' + JSON.stringify(pushSubscription))
+
     webPush.sendNotification(pushSubscription, payload).catch((error) => {
-      console.log(error)
+      console.log('@@' + error)
     })
   }
 
