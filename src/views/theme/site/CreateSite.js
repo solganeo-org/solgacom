@@ -79,7 +79,7 @@ const CreateSite = () => {
                   })
                   .then(function (response) {
                     if (response.status == 200) {
-                      window.location.reload()
+                      // window.location.reload()
                     }
                   })
               })

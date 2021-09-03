@@ -1,4 +1,4 @@
-export function download(data, filename, type) {
+export default function download(data, filename, type) {
   var file = new Blob([data], { type: type })
   if (window.navigator.msSaveOrOpenBlob)
     // IE10+

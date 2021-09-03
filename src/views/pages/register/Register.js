@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+import ValidateForm from './../../../js/ValidateForm'
 import {
   CButton,
   CCard,
@@ -7,10 +10,12 @@ import {
   CCol,
   CContainer,
   CForm,
+  CFormSelect,
   CFormControl,
   CInputGroup,
   CInputGroupText,
   CRow,
+  CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
@@ -26,60 +31,84 @@ const Register = () => {
   const [societyName, setSocietyName] = useState('')
   const [siret, setSiret] = useState('')
   const [functionName, setFunctionName] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState()
   const [employeesNumber, setEmployeesNumber] = useState('')
   const [country, setCountry] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [alertEmailMessage, setAlertEmailMessage] = useState('')
+  const [showAlertEmailMessage, setShowAlertEmailMessage] = useState(false)
+  const [alertPasswordMessage, setAlertPasswordMessage] = useState('')
+  const [showAlertPasswordMessage, setShowAlertPasswordMessage] = useState(false)
+
   let history = useHistory()
 
   // Register Action
   const handleSubmit = (e) => {
     e.preventDefault()
-    axios
-      .post(process.env.REACT_APP_ENDPOINT + '/api/accounts', {
-        nb_employees: employeesNumber,
-        society_name: societyName,
-        siret: siret,
-        country: country,
-        phone_number: phoneNumber,
-        email: email,
-        icon_path: '',
-        active: 1,
-      })
-      .then(function (response) {
-        if (response.status == 200) {
-          let dataAccount = response.data
 
-          axios
-            .post(process.env.REACT_APP_ENDPOINT + '/api/contacts', {
-              first_name: firstName,
-              last_name: lastName,
-              email: email,
-              fonction: functionName,
-              icon_path: '',
-              id_account: dataAccount.data,
-              last_modification: dateFormat(new Date(), 'isoDateTime'),
-              active: 1,
-            })
-            .then(function (response) {
-              if (response.status == 200) {
-                axios
-                  .post(process.env.REACT_APP_ENDPOINT + '/api/users', {
-                    username: email,
-                    password: password,
-                    id_profile: 0,
-                    active: 1,
-                  })
-                  .then(function (response) {
-                    if (response.status == 200) {
-                      history.push('/')
-                    }
-                  })
-              }
-            })
-        }
-      })
+    if (
+      !ValidateForm.validatePassword(password, confirmPassword) &&
+      !ValidateForm.validateEmail(email)
+    ) {
+      setShowAlertPasswordMessage(false)
+      setShowAlertEmailMessage(false)
+
+      if (!ValidateForm.validatePassword(password, confirmPassword)) {
+        setAlertPasswordMessage('Both passwords are not the same')
+        setShowAlertPasswordMessage(true)
+      }
+
+      if (!ValidateForm.validateEmail(email)) {
+        setAlertEmailMessage('Incorrect Format')
+        setShowAlertEmailMessage(true)
+      }
+    } else {
+      axios
+        .post(process.env.REACT_APP_ENDPOINT + '/api/accounts', {
+          nb_employees: employeesNumber,
+          society_name: societyName,
+          siret: siret,
+          country: country,
+          phone_number: phoneNumber,
+          email: email,
+          icon_path: '',
+          active: 1,
+        })
+        .then(function (response) {
+          if (response.status == 200) {
+            let dataAccount = response.data
+
+            axios
+              .post(process.env.REACT_APP_ENDPOINT + '/api/contacts', {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                fonction: functionName,
+                icon_path: '',
+                id_account: dataAccount.data,
+                last_modification: dateFormat(new Date(), 'isoDateTime'),
+                active: 1,
+              })
+              .then(function (response) {
+                if (response.status == 200) {
+                  axios
+                    .post(process.env.REACT_APP_ENDPOINT + '/api/users', {
+                      username: email,
+                      password: password,
+                      id_profile: 0,
+                      active: 1,
+                    })
+                    .then(function (response) {
+                      if (response.status == 200) {
+                        history.push('/')
+                      }
+                    })
+                }
+              })
+          }
+        })
+    }
   }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
@@ -102,6 +131,7 @@ const Register = () => {
                           placeholder="First Name"
                           autoComplete="firstname"
                           onChange={(e) => setFirstName(e.target.value)}
+                          required
                         ></CFormControl>
                       </CInputGroup>
                     </CCol>
@@ -115,6 +145,7 @@ const Register = () => {
                           placeholder="Last Name"
                           autoComplete="lastname"
                           onChange={(e) => setLastName(e.target.value)}
+                          required
                         ></CFormControl>
                       </CInputGroup>
                     </CCol>
@@ -127,8 +158,13 @@ const Register = () => {
                       placeholder="Email"
                       autoComplete="email"
                       onChange={(e) => setEmail(e.target.value)}
+                      required
                     />
                   </CInputGroup>
+
+                  {showAlertEmailMessage ? (
+                    <CAlert color="warning">{alertEmailMessage}</CAlert>
+                  ) : null}
 
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
@@ -139,6 +175,7 @@ const Register = () => {
                       placeholder="Society Name"
                       autoComplete="societyname"
                       onChange={(e) => setSocietyName(e.target.value)}
+                      required
                     ></CFormControl>
                   </CInputGroup>
 
@@ -151,19 +188,35 @@ const Register = () => {
                       placeholder="SIRET"
                       autoComplete="siret"
                       onChange={(e) => setSiret(e.target.value)}
+                      required
                     ></CFormControl>
                   </CInputGroup>
 
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
-                      <CIcon name="cil-user" />
+                      <CIcon name="cil-list" />
                     </CInputGroupText>
 
                     <CFormControl
                       placeholder="Function"
                       autoComplete="function"
                       onChange={(e) => setFunctionName(e.target.value)}
+                      required
                     ></CFormControl>
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <PhoneInput
+                      country={'fr'}
+                      enableAreaCodes={false}
+                      value={phoneNumber}
+                      onChange={setPhoneNumber}
+                      containerClass="my-container-class"
+                      inputClass="my-input-class"
+                      inputStyle={{
+                        width: '100%',
+                      }}
+                      required
+                    />
                   </CInputGroup>
 
                   <CInputGroup className="mb-3">
@@ -171,23 +224,25 @@ const Register = () => {
                       <CIcon name="cil-user" />
                     </CInputGroupText>
 
-                    <CFormControl
-                      placeholder="Phone Number"
-                      autoComplete="phonenumber"
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                    ></CFormControl>
-                  </CInputGroup>
-
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon name="cil-user" />
-                    </CInputGroupText>
-
-                    <CFormControl
-                      placeholder="Employees Number"
-                      autoComplete="employeesnumber"
+                    <CFormSelect
+                      aria-label="Default select example"
                       onChange={(e) => setEmployeesNumber(e.target.value)}
-                    ></CFormControl>
+                      required
+                    >
+                      <option>Employees </option>
+
+                      <option value="1 - 10">1 - 10</option>
+
+                      <option value="11 - 20">11 - 20</option>
+
+                      <option value="21 - 99">21 - 99</option>
+
+                      <option value="100 - 499">100 - 499</option>
+
+                      <option value="500 - 1999">500 - 1999</option>
+
+                      <option value="2000">More than 2000</option>
+                    </CFormSelect>
                   </CInputGroup>
 
                   <CInputGroup className="mb-3">
@@ -199,6 +254,7 @@ const Register = () => {
                       placeholder="Country"
                       autoComplete="country"
                       onChange={(e) => setCountry(e.target.value)}
+                      required
                     ></CFormControl>
                   </CInputGroup>
 
@@ -211,6 +267,7 @@ const Register = () => {
                       placeholder="Password"
                       autoComplete="new-password"
                       onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -222,8 +279,13 @@ const Register = () => {
                       placeholder="Repeat password"
                       autoComplete="new-password"
                       onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
                     />
                   </CInputGroup>
+                  {showAlertPasswordMessage ? (
+                    <CAlert color="warning">{alertPasswordMessage}</CAlert>
+                  ) : null}
+
                   <div className="text-center">
                     <CButton type="submit" color="primary">
                       Create Account

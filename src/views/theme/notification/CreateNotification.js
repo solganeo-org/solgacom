@@ -14,7 +14,6 @@ import {
 } from '@coreui/react'
 import AmazonS3Connection from 'src/js/amazonS3'
 
-const webPush = require('web-push')
 const axios = require('axios')
 
 const Notification = () => {
@@ -51,11 +50,11 @@ const Notification = () => {
     let lastClient = clients[clients.length - 1]
     console.log(lastClient.endpoint)
 
-    webPush.setVapidDetails(
-      'mailto:r.zuniga@solganeo.com',
-      currentSite.public_key,
-      currentSite.private_key,
-    )
+    const vapidDetails = {
+      mailto: 'mailto:r.zuniga@solganeo.com',
+      publicKey: currentSite.public_key,
+      privateKey: currentSite.private_key,
+    }
     let pushSubscription = {
       endpoint: lastClient.endpoint,
       keys: {
@@ -67,13 +66,21 @@ const Notification = () => {
       title: title,
       body: content,
       icon: 'https://drive.google.com/file/d/1HPH-xIeDWhUB9O2-Fc6anfPU-QdeYPJk/view?usp=sharing',
+      url1: 'http://google.com/',
+      url2: 'https://www.yahoo.com/',
+      actionName: 'archive',
+      actiontitle: 'LOL',
     })
 
-    console.log('@@' + JSON.stringify(pushSubscription))
-
-    webPush.sendNotification(pushSubscription, payload).catch((error) => {
-      console.log('@@' + error)
-    })
+    axios
+      .post(process.env.REACT_APP_ENDPOINT + '/api/send-notification', {
+        payload: payload,
+        vapidDetails: vapidDetails,
+        pushSubscription: pushSubscription,
+      })
+      .then((resp) => {
+        console.log(resp.data)
+      })
   }
 
   // Render if any application is selected
