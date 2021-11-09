@@ -76,7 +76,7 @@ const AppHeader = () => {
 
     // Read all SItes visibles from this account
     axios
-      .get(process.env.REACT_APP_ENDPOINT + '/api/sites_customers/customer-id/' + contact.id)
+      .get(process.env.REACT_APP_ENDPOINT + '/api/sites-customers/customer-id/' + contact.id)
       .then((resp) => {
         resp.data.forEach((site) => handleAddNewSite(site))
       })
