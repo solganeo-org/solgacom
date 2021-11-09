@@ -34,7 +34,7 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    axios.get(process.env.REACT_APP_ENDPOINT + '/api/contact/email/' + email).then((resp) => {
+    axios.get(process.env.REACT_APP_ENDPOINT + '/api/contacts/email/' + email).then((resp) => {
       if (resp.data[0] == null) {
         alert('Invalid Email or Password')
       } else {

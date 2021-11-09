@@ -29,7 +29,7 @@ const WidgetsBrand = lazy(() => import('../components/widgets/WidgetsBrand.js'))
 const Dashboard = () => {
   let history = useHistory()
   useEffect(() => {
-    if (!sessionStorage.getItem('user')) history.push('/')
+    if (!sessionStorage.getItem('contact')) history.push('/')
     else {
       /* console.log('User: ' + sessionStorage.getItem('user'))
       console.log('Contact: ' + sessionStorage.getItem('contact'))
