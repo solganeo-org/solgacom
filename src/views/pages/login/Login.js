@@ -24,8 +24,7 @@ const Login = () => {
   const [password, setPassword] = useState('')
 
   useEffect(() => {
-    if (sessionStorage.getItem('user')) {
-      sessionStorage.removeItem('user')
+    if (sessionStorage.getItem('contact')) {
       sessionStorage.removeItem('contact')
       sessionStorage.removeItem('account')
       sessionStorage.removeItem('currentSite')
@@ -35,18 +34,18 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    axios.get(process.env.REACT_APP_ENDPOINT + '/api/users/email/' + email).then((resp) => {
+    axios.get(process.env.REACT_APP_ENDPOINT + '/api/contact/email/' + email).then((resp) => {
       if (resp.data[0] == null) {
         alert('Invalid Email or Password')
       } else {
-        let user = resp.data[0]
-        let passwordResponse = user.password
+        let contact = resp.data[0]
+        let passwordResponse = contact.password
 
         if (passwordResponse === password) {
-          sessionStorage.setItem('user', JSON.stringify(user))
+          sessionStorage.setItem('contact', JSON.stringify(contact))
 
           axios
-            .get(process.env.REACT_APP_ENDPOINT + '/api/contacts/email/' + user.username)
+            .get(process.env.REACT_APP_ENDPOINT + '/api/contacts/email/' + contact.username)
             .then((resp) => {
               let contact = resp.data[0]
               sessionStorage.setItem('contact', JSON.stringify(contact))

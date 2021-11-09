@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import PhoneInput from 'react-phone-input-2'
@@ -83,6 +84,8 @@ const Register = () => {
               .post(process.env.REACT_APP_ENDPOINT + '/api/contacts', {
                 first_name: firstName,
                 last_name: lastName,
+                username: email,
+                password: password,
                 email: email,
                 fonction: functionName,
                 icon_path: '',
@@ -92,18 +95,7 @@ const Register = () => {
               })
               .then(function (response) {
                 if (response.status == 200) {
-                  axios
-                    .post(process.env.REACT_APP_ENDPOINT + '/api/users', {
-                      username: email,
-                      password: password,
-                      id_profile: 0,
-                      active: 1,
-                    })
-                    .then(function (response) {
-                      if (response.status == 200) {
-                        history.push('/')
-                      }
-                    })
+                  history.push('/')
                 }
               })
           }
