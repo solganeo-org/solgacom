@@ -65,7 +65,7 @@ const Profile = () => {
 
             <CRow className="mb-1">
               <CCol>Password: </CCol>
-              <CCol>{user.password} </CCol>
+              <CCol>{contact.password} </CCol>
             </CRow>
           </CardContent>
         </Card>
