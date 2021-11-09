@@ -31,10 +31,10 @@ const Dashboard = () => {
   useEffect(() => {
     if (!sessionStorage.getItem('user')) history.push('/')
     else {
-      console.log('User: ' + sessionStorage.getItem('user'))
+      /* console.log('User: ' + sessionStorage.getItem('user'))
       console.log('Contact: ' + sessionStorage.getItem('contact'))
       console.log('Account: ' + sessionStorage.getItem('account'))
-      console.log('Profile: ' + sessionStorage.getItem('profile'))
+      console.log('Profile: ' + sessionStorage.getItem('profile')) */
     }
   }, [])
 

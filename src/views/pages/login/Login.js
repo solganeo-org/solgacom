@@ -36,35 +36,39 @@ const Login = () => {
     e.preventDefault()
 
     axios.get(process.env.REACT_APP_ENDPOINT + '/api/users/email/' + email).then((resp) => {
-      let user = resp.data[0]
-      let passwordResponse = user.password
-
-      if (passwordResponse == password) {
-        sessionStorage.setItem('user', JSON.stringify(user))
-
-        axios
-          .get(process.env.REACT_APP_ENDPOINT + '/api/contacts/email/' + user.username)
-          .then((resp) => {
-            let contact = resp.data[0]
-            sessionStorage.setItem('contact', JSON.stringify(contact))
-
-            axios
-              .get(process.env.REACT_APP_ENDPOINT + '/api/accounts/id/' + contact.id_account)
-              .then((resp) => {
-                let account = resp.data[0]
-                sessionStorage.setItem('account', JSON.stringify(account))
-
-                axios
-                  .get(process.env.REACT_APP_ENDPOINT + '/api/profiles/id/' + account.profile_id)
-                  .then((resp) => {
-                    let profile = resp.data[0]
-                    sessionStorage.setItem('profile', JSON.stringify(profile))
-                    history.push('/dashboard')
-                  })
-              })
-          })
+      if (resp.data[0] == null) {
+        alert('Invalid Email or Password')
       } else {
-        console.log('Email or Password Incorrect')
+        let user = resp.data[0]
+        let passwordResponse = user.password
+
+        if (passwordResponse === password) {
+          sessionStorage.setItem('user', JSON.stringify(user))
+
+          axios
+            .get(process.env.REACT_APP_ENDPOINT + '/api/contacts/email/' + user.username)
+            .then((resp) => {
+              let contact = resp.data[0]
+              sessionStorage.setItem('contact', JSON.stringify(contact))
+
+              axios
+                .get(process.env.REACT_APP_ENDPOINT + '/api/accounts/id/' + contact.id_account)
+                .then((resp) => {
+                  let account = resp.data[0]
+                  sessionStorage.setItem('account', JSON.stringify(account))
+
+                  axios
+                    .get(process.env.REACT_APP_ENDPOINT + '/api/profiles/id/' + account.profile_id)
+                    .then((resp) => {
+                      let profile = resp.data[0]
+                      sessionStorage.setItem('profile', JSON.stringify(profile))
+                      history.push('/dashboard')
+                    })
+                })
+            })
+        } else {
+          alert('Invalid Email or Password')
+        }
       }
     })
   }
@@ -94,6 +98,7 @@ const Login = () => {
                         placeholder="Email"
                         autoComplete="email"
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                       />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
@@ -105,6 +110,7 @@ const Login = () => {
                         placeholder="Password"
                         autoComplete="current-password"
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                       />
                     </CInputGroup>
                     <CRow>

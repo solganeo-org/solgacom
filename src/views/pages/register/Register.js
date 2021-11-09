@@ -189,6 +189,7 @@ const Register = () => {
                       autoComplete="siret"
                       onChange={(e) => setSiret(e.target.value)}
                       required
+                      minlength="14"
                     ></CFormControl>
                   </CInputGroup>
 
@@ -268,6 +269,7 @@ const Register = () => {
                       autoComplete="new-password"
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      minlength="8"
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
