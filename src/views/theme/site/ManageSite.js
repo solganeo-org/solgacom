@@ -60,20 +60,20 @@ const ManageSite = () => {
           </Typography>
         </CCardHeader>
         <CCardBody>
-          {sites.map(function (name, index) {
+          {sites.map(function (site, index) {
             return (
               <Card boxShadow={0} key={index} className="my-2">
                 <CardContent>
                   <Typography variant="h6" color="textSecondary">
-                    {name.name}
+                    {site.name}
                   </Typography>
                   <Typography variant="subtitle2" color="textSecondary">
-                    {name.url}
+                    {site.url}
                   </Typography>
                   <Typography variant="subtitle2" color="textSecondary">
-                    {name.domain}
+                    {site.domain}
                   </Typography>
-                  <Typography color="textSecondary">{name.icon_path}</Typography>
+                  <Typography color="textSecondary">{site.icon_path}</Typography>
                 </CardContent>
                 <CardActions>
                   <Button size="small" color="primary">
@@ -82,7 +82,7 @@ const ManageSite = () => {
                   <Button
                     size="small"
                     color="primary"
-                    url_amazon={name.url_amazon}
+                    url_amazon={site.url_amazon}
                     onClick={handleSeeCode}
                   >
                     See Code
