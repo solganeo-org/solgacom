@@ -22,6 +22,9 @@ class AmazonS3Connection {
       Body: Buffer.from(code),
     }
 
+    console.log(s3)
+    console.log(params)
+
     s3.upload(params, function (err, data) {
       if (err) {
         throw err
