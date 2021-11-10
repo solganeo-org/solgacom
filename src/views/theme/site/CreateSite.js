@@ -12,7 +12,7 @@ import {
   CInputGroup,
   CFormControl,
 } from '@coreui/react'
-import AmazonS3Connection from 'src/js/amazonS3'
+//import AmazonS3Connection from 'src/js/amazonS3'
 
 const axios = require('axios')
 const webpush = require('web-push')
@@ -46,6 +46,7 @@ const CreateSite = () => {
       })
       .then(function (response) {
         if (response.status == 200) {
+          console.log(response.data)
           let site = response.data
 
           let data = {
@@ -54,36 +55,42 @@ const CreateSite = () => {
             privateKey: vapidKeys.privateKey,
           }
 
-          AmazonS3Connection.upload('webpush_' + newId + '.js', data, function (url_amazon) {
-            console.log(url_amazon)
-            console.log(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data)
+          // AmazonS3Connection.upload('webpush_' + newId + '.js', data, function (url_amazon) {
+          //console.log(url_amazon)
+          console.log(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data)
 
-            axios
-              .put(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data, {
-                name: name,
-                url: url,
-                domain: domain,
-                iconPath: '',
-                private_key: vapidKeys.privateKey,
-                public_key: vapidKeys.publicKey,
-                url_amazon: url_amazon,
-                active: '1',
-              })
-              .then(function (response) {
-                // Add Contact as Creator
-                axios
-                  .post(process.env.REACT_APP_ENDPOINT + '/api/sites-rules', {
-                    id_site: site.data,
-                    id_contact: contact.id,
-                    active: 1,
-                  })
-                  .then(function (response) {
-                    if (response.status == 200) {
-                      window.location.reload()
-                    }
-                  })
-              })
-          })
+          axios
+            .put(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data, {
+              name: name,
+              url: url,
+              domain: domain,
+              iconPath: '',
+              private_key: vapidKeys.privateKey,
+              public_key: vapidKeys.publicKey,
+              //url_amazon: url_amazon,
+              active: '1',
+            })
+            .then(function (response) {
+              // Add Contact as Creator
+              axios
+                .post(process.env.REACT_APP_ENDPOINT + '/api/sites-rules', {
+                  id: site.data,
+                  name: 'Owner',
+                  modify_site: '1',
+                  create_site: '1',
+                  delete_site: '1',
+                  read_dashboard: '1',
+                  id_contact: contact.id,
+                  id_site: site.data,
+                  active: 1,
+                })
+                .then(function (response) {
+                  if (response.status == 200) {
+                    //window.location.reload()
+                  }
+                })
+            })
+          // })
         }
       })
   }

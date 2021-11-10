@@ -208,6 +208,7 @@ const Register = () => {
                       inputStyle={{
                         width: '100%',
                       }}
+                      minlength="8"
                       required
                     />
                   </CInputGroup>
