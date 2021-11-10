@@ -33,7 +33,7 @@ const Notification = () => {
       let idSite = currentSite.id
       // Read all clients linked to the current application
       axios
-        .get(process.env.REACT_APP_ENDPOINT + '/api/sites-clients/client-id/' + idSite)
+        .get(process.env.REACT_APP_ENDPOINT + '/api/sites-customers/site-id/' + idSite)
         .then((resp) => {
           if (resp.status == 200) {
             let clientsResponse = resp.data
