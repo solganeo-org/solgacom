@@ -43,10 +43,11 @@ const ManageSite = () => {
   }
 
   useEffect(() => {
-    // Read all SItes visibles from this account
+    // Read all Sites visibles from this account
     axios
-      .get(process.env.REACT_APP_ENDPOINT + '/api/sites-contacts/account-id/' + contact.id)
+      .get(process.env.REACT_APP_ENDPOINT + '/api/sites-rules/contact-id/' + contact.id)
       .then((resp) => {
+        console.log(resp)
         resp.data.forEach((site) => handleAddNewSite(site))
       })
   }, []) // <-- empty dependency array
