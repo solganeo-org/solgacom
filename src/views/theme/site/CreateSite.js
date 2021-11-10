@@ -72,7 +72,7 @@ const CreateSite = () => {
               .then(function (response) {
                 // Add Contact as Creator
                 axios
-                  .post(process.env.REACT_APP_ENDPOINT + '/api/sites-contacts', {
+                  .post(process.env.REACT_APP_ENDPOINT + '/api/sites-rules', {
                     id_site: site.data,
                     id_contact: contact.id,
                     active: 1,
