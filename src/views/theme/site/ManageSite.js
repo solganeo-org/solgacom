@@ -47,8 +47,10 @@ const ManageSite = () => {
     axios
       .get(process.env.REACT_APP_ENDPOINT + '/api/sites-rules/contact-id/' + contact.id)
       .then((resp) => {
-        console.log(resp)
-        resp.data.forEach((site) => handleAddNewSite(site))
+        resp.data.forEach((site) => {
+          console.log(site)
+          handleAddNewSite(site)
+        })
       })
   }, []) // <-- empty dependency array
   return (
