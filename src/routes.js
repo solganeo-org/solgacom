@@ -3,6 +3,7 @@ import React from 'react'
 // examples
 
 const Notification = React.lazy(() => import('./views/theme/notification/Notification'))
+const ManageNotification = React.lazy(() => import('./views/theme/notification/ManageNotification'))
 const CreateNotification = React.lazy(() => import('./views/theme/notification/CreateNotification'))
 
 const CreateSite = React.lazy(() => import('./views/theme/site/CreateSite'))
@@ -34,6 +35,12 @@ const routes = [
     name: 'Create Notification',
     component: CreateNotification,
     exact: false,
+  },
+  {
+    path: '/dashboard/notification/manage',
+    exact: false,
+    name: 'Manage Notification',
+    component: ManageNotification,
   },
   { path: '/dashboard/user', name: 'User', component: User, exact: true },
   { path: '/dashboard/user/create', name: 'Create User', component: CreateUser, exact: true },

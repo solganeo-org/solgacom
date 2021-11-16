@@ -53,6 +53,7 @@ const ManageSite = () => {
         })
       })
   }, []) // <-- empty dependency array
+
   return (
     <>
       <CCard className="mb-4">
