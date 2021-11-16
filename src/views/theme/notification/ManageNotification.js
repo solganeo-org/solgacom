@@ -100,13 +100,11 @@ const ManageNotification = () => {
     console.log(notifications[index].id)
     e.preventDefault()
     axios
-      .post(
-        process.env.REACT_APP_ENDPOINT + '/api/notification/delete/' + notifications[index].id,
-        {},
-      )
+      .post(process.env.REACT_APP_ENDPOINT + '/api/notification/delete/' + notifications[index].id)
       .then(function (response) {
         if (response.status === 200) {
           window.location.reload()
+          console.log(notifications[index].id)
         }
       })
   }
@@ -116,9 +114,6 @@ const ManageNotification = () => {
     axios
       .get(process.env.REACT_APP_ENDPOINT + '/api/notification/site-id/' + currentSite.id)
       .then((resp) => {
-        console.log(resp.data)
-        console.log(currentSite.id)
-
         resp.data.forEach((notification) => {
           console.log(notification)
 
