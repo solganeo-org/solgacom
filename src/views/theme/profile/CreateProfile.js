@@ -15,23 +15,44 @@ import {
   CButton,
 } from '@coreui/react'
 
+const axios = require('axios')
+
 const CreateProfile = () => {
+  const [readSite, setReadsite] = useState(true)
+  const [deleteContact, setDeleteContact] = useState(true)
+  const [createContact, setCreateContact] = useState(true)
+  const [modifyContact, setModifyContact] = useState(true)
   const [name, setName] = useState('')
+  const account = JSON.parse(sessionStorage.getItem('account'))
   const [state, setState] = React.useState({
-    readSite: true,
-    modifySite: true,
-    deleteSite: true,
-    createContact: true,
-    modifyContact: true,
-    deleteContact: true,
+    readSite: readSite,
+    createContact: createContact,
+    modifyContact: modifyContact,
+    deleteContact: deleteContact,
   })
+
+  const createProfile = (e) => {
+    e.preventDefault()
+    axios
+      .post(process.env.REACT_APP_ENDPOINT + '/api/profiles', {
+        name: name,
+        read_site: state.readSite,
+        delete_contact: state.deleteContact,
+        create_contact: state.createContact,
+        modify_contact: state.modifyContact,
+        id_account: account.id,
+        active: '1',
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          window.location.reload()
+        }
+      })
+  }
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked })
-  }
-
-  const handleCreateProfile = (e) => {
-    e.preventDefault()
+    console.log(account)
   }
 
   return (
@@ -43,7 +64,7 @@ const CreateProfile = () => {
           </Typography>
         </CCardHeader>
         <CCardBody>
-          <CForm className="text-center" onSubmit={handleCreateProfile}>
+          <CForm className="text-center" onSubmit={createProfile}>
             <CInputGroup className="mb-3 text-center">
               <CFormControl
                 type="text"
@@ -62,28 +83,6 @@ const CreateProfile = () => {
                 />
               }
               label="Read Site"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={state.modifySite}
-                  onChange={handleChange}
-                  name="modifySite"
-                  color="primary"
-                />
-              }
-              label="Modify Site"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={state.deleteSite}
-                  onChange={handleChange}
-                  name="deleteSite"
-                  color="primary"
-                />
-              }
-              label="Delete Site"
             />
             <FormControlLabel
               control={

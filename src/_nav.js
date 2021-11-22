@@ -65,16 +65,16 @@ const _nav = [
   {
     _component: 'CNavItem',
     as: NavLink,
-    anchor: 'Create User',
-    to: '/dashboard/user/create',
+    anchor: 'Create Contact',
+    to: '/dashboard/contact/create',
     icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
   },
 
   {
     _component: 'CNavItem',
     as: NavLink,
-    anchor: 'Manage Users',
-    to: '/dashboard/user/manage',
+    anchor: 'Manage Contact',
+    to: '/dashboard/contact/manage',
     icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
   },
 

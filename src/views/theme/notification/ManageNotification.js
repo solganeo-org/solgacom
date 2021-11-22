@@ -10,7 +10,6 @@ import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 const axios = require('axios')
 
 const ManageNotification = () => {
-  const contact = JSON.parse(sessionStorage.getItem('contact'))
   const [notifications, setNotification] = useState([])
   const [customers, setCustomers] = useState([])
   const currentSite =
@@ -24,10 +23,21 @@ const ManageNotification = () => {
       let idSite = currentSite.id
       // Read all clients linked to the current application
       axios
+        .get(process.env.REACT_APP_ENDPOINT + '/api/notification/site-id/' + currentSite.id)
+        .then((resp) => {
+          resp.data.forEach((notification) => {
+            //console.log(notification)
+
+            handleAddNewNotification(notification)
+          })
+        })
+
+      axios
         .get(process.env.REACT_APP_ENDPOINT + '/api/sites-customers/customers-id/' + idSite)
         .then((resp) => {
           if (resp.status === 200) {
-            //console.log(resp.data)
+            console.log(idSite)
+            console.log(resp.data)
             let clientsResponse = resp.data
             setCustomers(clientsResponse)
           }
@@ -86,41 +96,29 @@ const ManageNotification = () => {
       })
       .then((resp) => {
         console.log(notifications[index].id)
-        axios.post(
+        axios.put(
           process.env.REACT_APP_ENDPOINT + '/api/notification/update/' + notifications[index].id,
           {
             status: 'Sent',
           },
+          console.log(notifications[index].id),
         )
-        window.location.reload()
       })
   }
 
   const deleteNotification = (e, index) => {
-    console.log(notifications[index].id)
+    // console.log(notifications[index].id)
     e.preventDefault()
     axios
-      .post(process.env.REACT_APP_ENDPOINT + '/api/notification/delete/' + notifications[index].id)
+      .delete(
+        process.env.REACT_APP_ENDPOINT + '/api/notification/delete/' + notifications[index].id,
+      )
       .then(function (response) {
         if (response.status === 200) {
           window.location.reload()
-          console.log(notifications[index].id)
         }
       })
   }
-
-  useEffect(() => {
-    // Read all Sites visibles from this account
-    axios
-      .get(process.env.REACT_APP_ENDPOINT + '/api/notification/site-id/' + currentSite.id)
-      .then((resp) => {
-        resp.data.forEach((notification) => {
-          console.log(notification)
-
-          handleAddNewNotification(notification)
-        })
-      })
-  }, [])
 
   if (currentSite != undefined) {
     return (
@@ -171,6 +169,12 @@ const ManageNotification = () => {
             })}
           </CCardBody>
         </CCard>
+      </>
+    )
+  } else {
+    return (
+      <>
+        <CCardHeader>Please Select an Application on the Header</CCardHeader>
       </>
     )
   }

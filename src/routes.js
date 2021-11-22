@@ -13,9 +13,9 @@ const Profile = React.lazy(() => import('./views/theme/settings/Profile'))
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
-const User = React.lazy(() => import('./views/theme/user/CreateUser'))
-const CreateUser = React.lazy(() => import('./views/theme/user/CreateUser'))
-const ManageUser = React.lazy(() => import('./views/theme/user/ManageUser'))
+const Contact = React.lazy(() => import('./views/theme/contact/CreateContact'))
+const CreateContact = React.lazy(() => import('./views/theme/contact/CreateContact'))
+const ManageContact = React.lazy(() => import('./views/theme/contact/ManageContact'))
 
 const Profiles = React.lazy(() => import('./views/theme/profile/CreateProfile'))
 const CreateProfile = React.lazy(() => import('./views/theme/profile/CreateProfile'))
@@ -42,9 +42,19 @@ const routes = [
     name: 'Manage Notification',
     component: ManageNotification,
   },
-  { path: '/dashboard/user', name: 'User', component: User, exact: true },
-  { path: '/dashboard/user/create', name: 'Create User', component: CreateUser, exact: true },
-  { path: '/dashboard/user/manage', name: 'Manage User', component: ManageUser, exact: true },
+  { path: '/dashboard/contact', name: 'Contact', component: Contact, exact: true },
+  {
+    path: '/dashboard/contact/create',
+    name: 'Create Contact',
+    component: CreateContact,
+    exact: true,
+  },
+  {
+    path: '/dashboard/contact/manage',
+    name: 'Manage Contact',
+    component: ManageContact,
+    exact: true,
+  },
 
   { path: '/dashboard/profile', name: 'Profile', component: Profiles, exact: true },
   {
