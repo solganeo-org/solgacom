@@ -1,149 +1,132 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
-import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
-  CCard,
-  CCardBody,
-  CCardFooter,
-  CCardHeader,
-  CCol,
-  CProgress,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 
-const ManageUser = () => {
+import Code from '../../modals/Code.js'
+
+const axios = require('axios')
+
+const ManageContact = () => {
+  const account = JSON.parse(sessionStorage.getItem('account'))
+  const [contacts, setContacts] = useState([])
+  const [show, setShow] = useState(false)
+  const [profileNames, setProfileNames] = useState([])
+
+  const handleShow = () => setShow(true)
+
+  const handleAddNewContact = (contact, profileName) => {
+    setContacts((contacts) => [
+      ...contacts,
+      {
+        id: contact.id,
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        fonction: contact.fonction,
+        username: contact.username,
+        id_account: account.id,
+        id_profile: contact.id_profile,
+        active: contact.active,
+        profile_name: profileName.name,
+      },
+    ])
+  }
+
+  const handleAddNewProfileNames = (profileName) => {
+    setProfileNames((profileNames) => [
+      ...profileNames,
+      {
+        name: profileName.name,
+      },
+    ])
+  }
+
+  const deleteContact = (e, index) => {
+    // console.log(notifications[index].id)
+    if (contacts[index].fonction === 'CEO') {
+      console.log('Vous ne pouvez pas supprimer le contact lier a se compte')
+    } else {
+      e.preventDefault()
+      axios
+        .delete(process.env.REACT_APP_ENDPOINT + '/api/contacts/delete/' + contacts[index].id)
+        .then(function (response) {
+          if (response.status === 200) {
+            window.location.reload()
+          }
+        })
+    }
+  }
+
+  useEffect(() => {
+    // Read all Sites visibles from this account
+    axios
+      .get(process.env.REACT_APP_ENDPOINT + '/api/contacts/account-id/' + account.id)
+      .then((resp) => {
+        resp.data.forEach((contact) => {
+          axios
+            .get(
+              process.env.REACT_APP_ENDPOINT + '/api/profiles/idProfileName/' + contact.id_profile,
+            )
+            .then((resp) => {
+              resp.data.forEach((profileName) => {
+                handleAddNewProfileNames(profileName)
+                handleAddNewContact(contact, profileName)
+                if (profileName === undefined) {
+                  handleAddNewContact(contact)
+                }
+              })
+            })
+        })
+      })
+  }, []) // <-- empty dependency array
+
   return (
     <>
-      <CRow>
-        <CCard className="mb-4">
-          <CCardHeader> Manage Users </CCardHeader>
-          <CCardBody>
-            <CTable hover responsive align="middle" className="mb-0 border">
-              <CTableHead color="light">
-                <CTableRow>
-                  <CTableHeaderCell className="text-center">
-                    <CIcon name="cil-people" />
-                  </CTableHeaderCell>
-                  <CTableHeaderCell>User</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
-                  <CTableHeaderCell>Usage</CTableHeaderCell>
-                  <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
-                  <CTableHeaderCell>Activity</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                <CTableRow>
-                  <CTableDataCell className="text-center">
-                    <CAvatar size="md" src="/avatars/1.jpg" status="success" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>Yiorgos Avraamu</div>
-                    <div className="small text-medium-emphasis">
-                      <span>New</span> | Registered: Jan 1, 2015
-                    </div>
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <CIcon size="xl" name="cif-us" title="us" id="us" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div className="clearfix">
-                      <div className="float-start">
-                        <strong>50%</strong>
-                      </div>
-                      <div className="float-end">
-                        <small className="text-medium-emphasis">Jun 11, 2015 - Jul 10, 2015</small>
-                      </div>
-                    </div>
-                    <CProgress thin color="success" value={50} />
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <CIcon size="xl" name="cib-cc-mastercard" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div className="small text-medium-emphasis">Last login</div>
-                    <strong>10 sec ago</strong>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell className="text-center">
-                    <CAvatar size="md" src="/avatars/2.jpg" status="danger" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>Avram Tarasios</div>
-                    <div className="small text-medium-emphasis">
-                      <span>Recurring</span> | Registered: Jan 1, 2015
-                    </div>
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <CIcon size="xl" name="cif-br" title="br" id="br" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div className="clearfix">
-                      <div className="float-start">
-                        <strong>10%</strong>
-                      </div>
-                      <div className="float-end">
-                        <small className="text-medium-emphasis">Jun 11, 2015 - Jul 10, 2015</small>
-                      </div>
-                    </div>
-                    <CProgress thin color="info" value={10} />
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <CIcon size="xl" name="cib-cc-visa" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div className="small text-medium-emphasis">Last login</div>
-                    <strong>5 minutes ago</strong>
-                  </CTableDataCell>
-                </CTableRow>
-                <CTableRow>
-                  <CTableDataCell className="text-center">
-                    <CAvatar size="md" src="/avatars/3.jpg" status="warning" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div>Quintin Ed</div>
-                    <div className="small text-medium-emphasis">
-                      <span>New</span> | Registered: Jan 1, 2015
-                    </div>
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <CIcon size="xl" name="cif-in" title="in" id="in" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div className="clearfix">
-                      <div className="float-start">
-                        <strong>74%</strong>
-                      </div>
-                      <div className="float-end">
-                        <small className="text-medium-emphasis">Jun 11, 2015 - Jul 10, 2015</small>
-                      </div>
-                    </div>
-                    <CProgress thin color="warning" value={74} />
-                  </CTableDataCell>
-                  <CTableDataCell className="text-center">
-                    <CIcon size="xl" name="cib-cc-stripe" />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <div className="small text-medium-emphasis">Last login</div>
-                    <strong>1 hour ago</strong>
-                  </CTableDataCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
-          </CCardBody>
-        </CCard>
-      </CRow>
+      <CCard className="mb-4">
+        <CCardHeader>
+          <Typography gutterBottom variant="h6" component="h2">
+            Manage contact
+          </Typography>
+        </CCardHeader>
+        <CCardBody>
+          {contacts.map(function (contact, index) {
+            // console.log(contact.profile_name)
+            return (
+              <Card boxShadow={0} key={index} className="my-2">
+                <CardContent>
+                  <Typography variant="h6" color="textSecondary">
+                    {contact.first_name} {contact.last_name}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {contact.username}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {contact.fonction}
+                  </Typography>
+
+                  <Typography variant="subtitle2" color="textSecondary" boxShadow={0} key={index}>
+                    {contact.profile_name}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" color="primary">
+                    Edit
+                  </Button>
+                  <Button size="small" color="primary" onClick={(e) => deleteContact(e, index)}>
+                    Delete
+                  </Button>
+                </CardActions>
+              </Card>
+            )
+          })}
+        </CCardBody>
+      </CCard>
     </>
   )
 }
 
-export default ManageUser
+export default ManageContact

@@ -71,6 +71,7 @@ const CreateProfile = () => {
                 placeholder="Name"
                 autoComplete="TItle"
                 onChange={(e) => setName(e.target.value)}
+                require
               />
             </CInputGroup>
             <FormControlLabel

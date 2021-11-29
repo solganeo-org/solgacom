@@ -43,16 +43,29 @@ const ManageSite = () => {
   }
 
   useEffect(() => {
+    console.log(contact)
     // Read all Sites visibles from this account
     axios
       .get(process.env.REACT_APP_ENDPOINT + '/api/sites-rules/contact-id/' + contact.id)
       .then((resp) => {
+        console.log(resp)
         resp.data.forEach((site) => {
-          console.log(site)
+          console.log(contact)
           handleAddNewSite(site)
         })
       })
   }, []) // <-- empty dependency array
+
+  const deleteSite = (e, index) => {
+    e.preventDefault()
+    axios
+      .delete(process.env.REACT_APP_ENDPOINT + '/api/notification/delete/' + sites[index].id)
+      .then(function (response) {
+        if (response.status === 200) {
+          window.location.reload()
+        }
+      })
+  }
 
   return (
     <>
@@ -89,6 +102,9 @@ const ManageSite = () => {
                     onClick={handleSeeCode}
                   >
                     See Code
+                  </Button>
+                  <Button size="small" color="primary" onClick={(e) => deleteSite(e, index)}>
+                    Delete
                   </Button>
                 </CardActions>
               </Card>

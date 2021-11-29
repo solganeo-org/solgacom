@@ -18,7 +18,7 @@ const ManageProfile = () => {
 
   const handleShow = () => setShow(true)
 
-  const handleAddNewSite = (profile) => {
+  const handleAddNewProfile = (profile) => {
     setProfiles((profiles) => [
       ...profiles,
       {
@@ -33,6 +33,18 @@ const ManageProfile = () => {
     ])
   }
 
+  const deleteNotification = (e, index) => {
+    // console.log(notifications[index].id)
+    e.preventDefault()
+    axios
+      .delete(process.env.REACT_APP_ENDPOINT + '/api/profiles/delete/' + profiles[index].id)
+      .then(function (response) {
+        if (response.status === 200) {
+          window.location.reload()
+        }
+      })
+  }
+
   useEffect(() => {
     // Read all Sites visibles from this account
     axios
@@ -40,7 +52,7 @@ const ManageProfile = () => {
       .then((resp) => {
         resp.data.forEach((profile) => {
           console.log(account.id)
-          handleAddNewSite(profile)
+          handleAddNewProfile(profile)
         })
       })
   }, []) // <-- empty dependency array
@@ -50,7 +62,7 @@ const ManageProfile = () => {
       <CCard className="mb-4">
         <CCardHeader>
           <Typography gutterBottom variant="h6" component="h2">
-            Manage Sites
+            Manage Contact
           </Typography>
         </CCardHeader>
         <CCardBody>
@@ -61,17 +73,17 @@ const ManageProfile = () => {
                   <Typography variant="h6" color="textSecondary">
                     {profile.name}
                   </Typography>
-                  <Typography variant="subtitle2" color="textSecondary">
-                    {profile.url}
-                  </Typography>
-                  <Typography variant="subtitle2" color="textSecondary">
-                    {profile.domain}
-                  </Typography>
-                  <Typography color="textSecondary">{profile.icon_path}</Typography>
                 </CardContent>
                 <CardActions>
                   <Button size="small" color="primary">
                     Edit
+                  </Button>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={(e) => deleteNotification(e, index)}
+                  >
+                    Delete
                   </Button>
                 </CardActions>
               </Card>

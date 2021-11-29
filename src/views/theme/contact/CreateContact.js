@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
@@ -19,7 +19,7 @@ import {
   CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import Profile from '../settings/Profile'
+import { IoTThingsGraph } from 'aws-sdk'
 
 const axios = require('axios')
 const dateFormat = require('dateformat')
@@ -33,6 +33,7 @@ const CreateContact = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [alertEmailMessage, setAlertEmailMessage] = useState('')
+  const [id_profile, setIdProfile] = useState('')
   const [showAlertEmailMessage, setShowAlertEmailMessage] = useState(false)
   const [alertPasswordMessage, setAlertPasswordMessage] = useState('')
   const [showAlertPasswordMessage, setShowAlertPasswordMessage] = useState(false)
@@ -42,7 +43,40 @@ const CreateContact = () => {
   let history = useHistory()
 
   // Register Action
-  const handleSubmit = (e, index) => {
+
+  useEffect((index) => {
+    // Read all Sites visibles from this account
+    axios
+      .get(process.env.REACT_APP_ENDPOINT + '/api/profiles/account-id/' + account.id)
+      .then((resp) => {
+        resp.data.forEach((profile) => {
+          handleAddNewProfile(profile)
+          console.log(id_profile)
+        })
+      })
+  }, []) // <-- empty dependency array
+
+  const handleAddNewProfile = (profile) => {
+    setProfile((profiles) => [
+      ...profiles,
+      {
+        id: profile.id,
+        name: profile.name,
+        id_account: profile.id_account,
+        read_site: profile.read_site,
+        create_contact: profile.create_contact,
+        modify_contact: profile.modify_contact,
+        delete_contact: profile.delete_contact,
+        active: profile.active,
+      },
+    ])
+  }
+
+  const setPID = (index) => {
+    setIdProfile({ id_profile: index })
+  }
+
+  const handleSubmit = (e) => {
     e.preventDefault()
 
     if (
@@ -72,7 +106,7 @@ const CreateContact = () => {
           fonction: functionName,
           icon_path: '',
           id_account: account.id,
-          id_profile: profiles[index].id,
+          id_profile: id_profile,
           last_modification: dateFormat(new Date(), 'isoDateTime'),
           active: 1,
         })
@@ -84,29 +118,6 @@ const CreateContact = () => {
     }
   }
 
-  const handleAddNewProfile = (profile) => {
-    setProfile((profiles) => [
-      ...profiles,
-      {
-        id: profile.id,
-        name: profile.name,
-        active: profile.active,
-      },
-    ])
-  }
-
-  useEffect(() => {
-    // Read all Sites visibles from this account
-    axios
-      .get(process.env.REACT_APP_ENDPOINT + '/api/profiles/account-id/' + account.id)
-      .then((resp) => {
-        resp.data.forEach((profile) => {
-          console.log(profiles.id)
-          handleAddNewProfile(profile)
-        })
-      })
-  }, []) // <-- empty dependency array
-
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -114,7 +125,7 @@ const CreateContact = () => {
           <CCol md="9" lg="7" xl="6">
             <CCard className="mx-4 my-5">
               <CCardBody className="p-4">
-                <CForm onSubmit={handleSubmit}>
+                <CForm onSubmit={(e) => handleSubmit(e)}>
                   <h1 className="display-5 text-center">Create Contact</h1>
                   <hr></hr>
                   <CRow className="mb-3">
@@ -192,11 +203,15 @@ const CreateContact = () => {
                       <CIcon name="cil-user" />
                     </CInputGroupText>
 
-                    <CFormSelect aria-label="Default select example" boxShadow={0} required>
+                    <CFormSelect
+                      aria-label="Default select example"
+                      boxShadow={0}
+                      onChange={(e) => setIdProfile(e.target.value)}
+                    >
                       <option>Profiles</option>
-                      {profiles.map(function (profile, index) {
+                      {profiles.map(function (profile) {
                         return (
-                          <option value={(index = profile.id)} key={(index = profile.id)}>
+                          <option value={profile.id} key={profile.id}>
                             {profile.name}
                           </option>
                         )
@@ -235,7 +250,7 @@ const CreateContact = () => {
 
                   <div className="text-center">
                     <CButton type="submit" color="primary">
-                      Create Account
+                      Create Contact
                     </CButton>
                   </div>
                 </CForm>

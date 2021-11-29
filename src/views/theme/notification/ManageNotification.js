@@ -26,8 +26,6 @@ const ManageNotification = () => {
         .get(process.env.REACT_APP_ENDPOINT + '/api/notification/site-id/' + currentSite.id)
         .then((resp) => {
           resp.data.forEach((notification) => {
-            //console.log(notification)
-
             handleAddNewNotification(notification)
           })
         })
@@ -36,8 +34,6 @@ const ManageNotification = () => {
         .get(process.env.REACT_APP_ENDPOINT + '/api/sites-customers/customers-id/' + idSite)
         .then((resp) => {
           if (resp.status === 200) {
-            console.log(idSite)
-            console.log(resp.data)
             let clientsResponse = resp.data
             setCustomers(clientsResponse)
           }
@@ -59,6 +55,7 @@ const ManageNotification = () => {
         active: notification.active,
       },
     ])
+    console.log(Notification.id)
   }
 
   const sendNotification = (e, index) => {
@@ -95,19 +92,16 @@ const ManageNotification = () => {
         pushSubscription: pushSubscription,
       })
       .then((resp) => {
-        console.log(notifications[index].id)
         axios.put(
           process.env.REACT_APP_ENDPOINT + '/api/notification/update/' + notifications[index].id,
           {
             status: 'Sent',
           },
-          console.log(notifications[index].id),
         )
       })
   }
 
   const deleteNotification = (e, index) => {
-    // console.log(notifications[index].id)
     e.preventDefault()
     axios
       .delete(
