@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   CListGroup,
@@ -26,6 +27,7 @@ const Notification = () => {
   const [customer, setCustomer] = useState([])
   const contact = JSON.parse(sessionStorage.getItem('contact'))
   const site = JSON.parse(sessionStorage.getItem('currentSite'))
+  let history = useHistory()
   const currentSite =
     sessionStorage.getItem('currentSite') != null &&
     sessionStorage.getItem('currentSite') !== 'undefined'
@@ -34,13 +36,13 @@ const Notification = () => {
 
   // Execute on Render
   useEffect(() => {
-    if (currentSite != undefined) {
+    if (currentSite !== undefined) {
       let idSite = currentSite.id
       // Read all clients linked to the current application
       axios
         .get(process.env.REACT_APP_ENDPOINT + '/api/sites-customers/site-id/' + idSite)
         .then((resp) => {
-          if (resp.status == 200) {
+          if (resp.status === 200) {
             console.log(contact.id)
             console.log('id site is ' + site.id)
             let clientsResponse = resp.data
@@ -68,13 +70,13 @@ const Notification = () => {
       })
       .then(function (response) {
         if (response.status === 200) {
-          window.location.reload()
+          history.push('/dashboard/notification/manage')
         }
       })
   }
 
   // Render if any application is selected
-  if (currentSite != undefined) {
+  if (currentSite !== undefined) {
     return (
       <>
         <CCard>

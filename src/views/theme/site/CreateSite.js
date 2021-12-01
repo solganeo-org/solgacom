@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   CListGroup,
@@ -23,7 +24,7 @@ const CreateSite = () => {
   const [url, setURL] = useState('')
   const [domain, setDomain] = useState('')
   const contact = JSON.parse(sessionStorage.getItem('contact'))
-
+  let history = useHistory()
   const createSite = (e) => {
     e.preventDefault()
     // Generate VAPID KEYS
@@ -85,7 +86,7 @@ const CreateSite = () => {
                   })
                   .then(function (response) {
                     if (response.status == 200) {
-                      window.location.reload()
+                      history.push('/dashboard/site/manage')
                     }
                   })
               })

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import { useHistory } from 'react-router-dom'
 import {
   CCard,
   CCardHeader,
@@ -24,6 +25,7 @@ const CreateProfile = () => {
   const [modifyContact, setModifyContact] = useState(true)
   const [name, setName] = useState('')
   const account = JSON.parse(sessionStorage.getItem('account'))
+  let history = useHistory()
   const [state, setState] = React.useState({
     readSite: readSite,
     createContact: createContact,
@@ -45,7 +47,7 @@ const CreateProfile = () => {
       })
       .then(function (response) {
         if (response.status === 200) {
-          window.location.reload()
+          history.push('/dashboard/profile/manage')
         }
       })
   }
@@ -71,7 +73,7 @@ const CreateProfile = () => {
                 placeholder="Name"
                 autoComplete="TItle"
                 onChange={(e) => setName(e.target.value)}
-                require
+                required
               />
             </CInputGroup>
             <FormControlLabel

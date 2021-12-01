@@ -33,16 +33,20 @@ const ManageProfile = () => {
     ])
   }
 
-  const deleteNotification = (e, index) => {
+  const deleteProfile = (e, index) => {
     // console.log(notifications[index].id)
-    e.preventDefault()
-    axios
-      .delete(process.env.REACT_APP_ENDPOINT + '/api/profiles/delete/' + profiles[index].id)
-      .then(function (response) {
-        if (response.status === 200) {
-          window.location.reload()
-        }
-      })
+    if (profiles[index].name === 'Admin') {
+      alert('Vous ne pouvez pas supprimer le profile principale lier a ce compte')
+    } else {
+      e.preventDefault()
+      axios
+        .delete(process.env.REACT_APP_ENDPOINT + '/api/profiles/delete/' + profiles[index].id)
+        .then(function (response) {
+          if (response.status === 200) {
+            window.location.reload()
+          }
+        })
+    }
   }
 
   useEffect(() => {
@@ -62,7 +66,7 @@ const ManageProfile = () => {
       <CCard className="mb-4">
         <CCardHeader>
           <Typography gutterBottom variant="h6" component="h2">
-            Manage Contact
+            Manage Profile
           </Typography>
         </CCardHeader>
         <CCardBody>
@@ -78,11 +82,7 @@ const ManageProfile = () => {
                   <Button size="small" color="primary">
                     Edit
                   </Button>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={(e) => deleteNotification(e, index)}
-                  >
+                  <Button size="small" color="primary" onClick={(e) => deleteProfile(e, index)}>
                     Delete
                   </Button>
                 </CardActions>

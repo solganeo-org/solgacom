@@ -48,7 +48,7 @@ const ManageContact = () => {
   const deleteContact = (e, index) => {
     // console.log(notifications[index].id)
     if (contacts[index].fonction === 'CEO') {
-      console.log('Vous ne pouvez pas supprimer le contact lier a se compte')
+      alert('Vous ne pouvez pas supprimer le contact lier a ce compte')
     } else {
       e.preventDefault()
       axios

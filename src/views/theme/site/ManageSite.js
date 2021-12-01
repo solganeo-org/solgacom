@@ -59,10 +59,16 @@ const ManageSite = () => {
   const deleteSite = (e, index) => {
     e.preventDefault()
     axios
-      .delete(process.env.REACT_APP_ENDPOINT + '/api/notification/delete/' + sites[index].id)
+      .delete(process.env.REACT_APP_ENDPOINT + '/api/sites-rules/delete/' + sites[index].id)
       .then(function (response) {
         if (response.status === 200) {
-          window.location.reload()
+          axios
+            .delete(process.env.REACT_APP_ENDPOINT + '/api/sites/delete/' + sites[index].id)
+            .then((response) => {
+              if (response.status === 200) {
+                window.location.reload()
+              }
+            })
         }
       })
   }

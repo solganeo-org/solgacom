@@ -92,12 +92,16 @@ const ManageNotification = () => {
         pushSubscription: pushSubscription,
       })
       .then((resp) => {
-        axios.put(
-          process.env.REACT_APP_ENDPOINT + '/api/notification/update/' + notifications[index].id,
-          {
-            status: 'Sent',
-          },
-        )
+        axios
+          .put(
+            process.env.REACT_APP_ENDPOINT + '/api/notification/update/' + notifications[index].id,
+            {
+              status: 'Sent',
+            },
+          )
+          .then((response) => {
+            console.log(response)
+          })
       })
   }
 

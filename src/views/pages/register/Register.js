@@ -95,6 +95,16 @@ const Register = () => {
               })
               .then(function (response) {
                 if (response.status == 200) {
+                  axios.post(process.env.REACT_APP_ENDPOINT + '/api/profiles', {
+                    name: 'Admin',
+                    delete_contact: '1',
+                    create_contact: '1',
+                    modify_contact: '1',
+                    read_site: '1',
+                    id_account: dataAccount.data,
+                    active: '1',
+                  })
+
                   history.push('/')
                 }
               })
