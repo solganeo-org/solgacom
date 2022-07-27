@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import { useHistory } from 'react-router-dom'
 import {
   CCard,
   CCardHeader,
@@ -15,23 +16,45 @@ import {
   CButton,
 } from '@coreui/react'
 
+const axios = require('axios')
+
 const CreateProfile = () => {
+  const [readSite, setReadsite] = useState(true)
+  const [deleteContact, setDeleteContact] = useState(true)
+  const [createContact, setCreateContact] = useState(true)
+  const [modifyContact, setModifyContact] = useState(true)
   const [name, setName] = useState('')
+  const account = JSON.parse(sessionStorage.getItem('account'))
+  let history = useHistory()
   const [state, setState] = React.useState({
-    readSite: true,
-    modifySite: true,
-    deleteSite: true,
-    createContact: true,
-    modifyContact: true,
-    deleteContact: true,
+    readSite: readSite,
+    createContact: createContact,
+    modifyContact: modifyContact,
+    deleteContact: deleteContact,
   })
+
+  const createProfile = (e) => {
+    e.preventDefault()
+    axios
+      .post(process.env.REACT_APP_ENDPOINT + '/api/profiles', {
+        name: name,
+        read_site: state.readSite,
+        delete_contact: state.deleteContact,
+        create_contact: state.createContact,
+        modify_contact: state.modifyContact,
+        id_account: account.id,
+        active: '1',
+      })
+      .then(function (response) {
+        if (response.status === 200) {
+          history.push('/dashboard/profile/manage')
+        }
+      })
+  }
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked })
-  }
-
-  const handleCreateProfile = (e) => {
-    e.preventDefault()
+    console.log(account)
   }
 
   return (
@@ -43,13 +66,14 @@ const CreateProfile = () => {
           </Typography>
         </CCardHeader>
         <CCardBody>
-          <CForm className="text-center" onSubmit={handleCreateProfile}>
+          <CForm className="text-center" onSubmit={createProfile}>
             <CInputGroup className="mb-3 text-center">
               <CFormControl
                 type="text"
                 placeholder="Name"
                 autoComplete="TItle"
                 onChange={(e) => setName(e.target.value)}
+                required
               />
             </CInputGroup>
             <FormControlLabel
@@ -62,28 +86,6 @@ const CreateProfile = () => {
                 />
               }
               label="Read Site"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={state.modifySite}
-                  onChange={handleChange}
-                  name="modifySite"
-                  color="primary"
-                />
-              }
-              label="Modify Site"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={state.deleteSite}
-                  onChange={handleChange}
-                  name="deleteSite"
-                  color="primary"
-                />
-              }
-              label="Delete Site"
             />
             <FormControlLabel
               control={

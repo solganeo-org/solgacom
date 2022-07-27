@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   CListGroup,
@@ -20,7 +21,13 @@ const Notification = () => {
   // Variables
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [clients, setClients] = useState([])
+  const [urlButton, seturlButton] = useState('')
+  const [urlRed, setUrlRed] = useState('')
+  const [urlImage, setUrlImage] = useState('')
+  const [customer, setCustomer] = useState([])
+  const contact = JSON.parse(sessionStorage.getItem('contact'))
+  const site = JSON.parse(sessionStorage.getItem('currentSite'))
+  let history = useHistory()
   const currentSite =
     sessionStorage.getItem('currentSite') != null &&
     sessionStorage.getItem('currentSite') !== 'undefined'
@@ -29,69 +36,54 @@ const Notification = () => {
 
   // Execute on Render
   useEffect(() => {
-    if (currentSite != undefined) {
+    if (currentSite !== undefined) {
       let idSite = currentSite.id
       // Read all clients linked to the current application
       axios
         .get(process.env.REACT_APP_ENDPOINT + '/api/sites-customers/site-id/' + idSite)
         .then((resp) => {
-          if (resp.status == 200) {
+          if (resp.status === 200) {
+            console.log(contact.id)
+            console.log('id site is ' + site.id)
             let clientsResponse = resp.data
-            setClients(clientsResponse)
+            setCustomer(clientsResponse)
           }
         })
     }
   }, [])
 
   // On click button Send
-  const sendNotification = (e) => {
+  const createNotification = (e) => {
+    console.log('id site is ' + site.id)
     e.preventDefault()
-
-    let lastClient = clients[clients.length - 1]
-    console.log(lastClient.endpoint)
-
-    const vapidDetails = {
-      mailto: 'mailto:r.zuniga@solganeo.com',
-      publicKey: currentSite.public_key,
-      privateKey: currentSite.private_key,
-    }
-    let pushSubscription = {
-      endpoint: lastClient.endpoint,
-      keys: {
-        p256dh: lastClient.key_p256dh,
-        auth: lastClient.key_auth,
-      },
-    }
-    const payload = JSON.stringify({
-      title: title,
-      body: content,
-      icon: 'https://drive.google.com/file/d/1HPH-xIeDWhUB9O2-Fc6anfPU-QdeYPJk/view?usp=sharing',
-      url1: 'http://google.com/',
-      url2: 'https://www.yahoo.com/',
-      actionName: 'archive',
-      actiontitle: 'LOL',
-    })
-
     axios
-      .post(process.env.REACT_APP_ENDPOINT + '/api/send-notification', {
-        payload: payload,
-        vapidDetails: vapidDetails,
-        pushSubscription: pushSubscription,
+      .post(process.env.REACT_APP_ENDPOINT + '/api/notification', {
+        title: title,
+        content: content,
+        id_contact: contact.id,
+        id_site: site.id,
+        urlImage: urlImage,
+        urlButton: urlButton,
+        urlRed: urlRed,
+        status: 'Draft',
+        active: 1,
       })
-      .then((resp) => {
-        console.log(resp.data)
+      .then(function (response) {
+        if (response.status === 200) {
+          history.push('/dashboard/notification/manage')
+        }
       })
   }
 
   // Render if any application is selected
-  if (currentSite != undefined) {
+  if (currentSite !== undefined) {
     return (
       <>
         <CCard>
           <CCardHeader>Create Notification</CCardHeader>
           <CCardBody>
             <CListGroup flush>
-              <CForm onSubmit={sendNotification}>
+              <CForm onSubmit={createNotification}>
                 <CInputGroup className="mb-3">
                   <CFormControl
                     type="text"
@@ -108,10 +100,34 @@ const Notification = () => {
                     onChange={(e) => setContent(e.target.value)}
                   />
                 </CInputGroup>
+                <CInputGroup className="mb-3">
+                  <CFormControl
+                    type="text"
+                    placeholder="URL Image"
+                    autoComplete="URL Image"
+                    onChange={(e) => setUrlImage(e.target.value)}
+                  />
+                </CInputGroup>
+                <CInputGroup className="mb-4">
+                  <CFormControl
+                    type="text"
+                    placeholder="URL Button"
+                    autoComplete="URL Button"
+                    onChange={(e) => seturlButton(e.target.value)}
+                  />
+                </CInputGroup>
+                <CInputGroup className="mb-4">
+                  <CFormControl
+                    type="text"
+                    placeholder="URL Reddirection"
+                    autoComplete="URL Redirection"
+                    onChange={(e) => setUrlRed(e.target.value)}
+                  />
+                </CInputGroup>
                 <CRow>
                   <CCol xs="6">
                     <CButton type="submit" color="success" className="px-4">
-                      Send
+                      Create
                     </CButton>
                   </CCol>
                 </CRow>
