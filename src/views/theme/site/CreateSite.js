@@ -57,6 +57,7 @@ const CreateSite = () => {
 
           AmazonS3Connection.upload('webpush_' + newId + '.js', data, function (url_amazon) {
             console.log(url_amazon)
+            console.log(site.data)
             console.log(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data)
 
             axios

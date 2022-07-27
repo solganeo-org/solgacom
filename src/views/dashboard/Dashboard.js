@@ -35,6 +35,8 @@ const Dashboard = () => {
       console.log('Contact: ' + sessionStorage.getItem('contact'))
       console.log('Account: ' + sessionStorage.getItem('account'))
       console.log('Profile: ' + sessionStorage.getItem('profile')) */
+
+      console.log(sessionStorage)
     }
   }, [])
 
