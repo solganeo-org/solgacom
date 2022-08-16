@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import CardContent from '@material-ui/core/CardContent'
@@ -6,9 +6,8 @@ import CardContent from '@material-ui/core/CardContent'
 import { CListGroup, CCard, CCardHeader, CCardBody, CRow, CCol } from '@coreui/react'
 
 const Profile = () => {
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')))
-  const [contact, setContact] = useState(JSON.parse(sessionStorage.getItem('contact')))
-  const [account, setAccount] = useState(JSON.parse(sessionStorage.getItem('account')))
+  const [contact] = useState(JSON.parse(sessionStorage.getItem('contact')))
+  const [account] = useState(JSON.parse(sessionStorage.getItem('account')))
 
   return (
     <>

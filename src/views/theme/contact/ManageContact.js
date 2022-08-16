@@ -7,18 +7,14 @@ import Typography from '@material-ui/core/Typography'
 
 import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 
-import Code from '../../modals/Code.js'
-
 const axios = require('axios')
 
 const ManageContact = () => {
   const account = JSON.parse(sessionStorage.getItem('account'))
   const [contacts, setContacts] = useState([])
-  const [show, setShow] = useState(false)
-  const [profileNames, setProfileNames] = useState([])
+  const [, setProfileNames] = useState([])
 
-  const handleShow = () => setShow(true)
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleAddNewContact = (contact, profileName) => {
     setContacts((contacts) => [
       ...contacts,

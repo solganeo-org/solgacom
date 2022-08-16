@@ -1,6 +1,4 @@
-import React, { useEffect, useState, createRef } from 'react'
-
-import { CListGroup, CListGroupItem, CCol, CCard, CCardHeader, CCardBody } from '@coreui/react'
+import React from 'react'
 
 const Notification = () => {
   return <></>
