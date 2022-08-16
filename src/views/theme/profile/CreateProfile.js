@@ -19,10 +19,10 @@ import {
 const axios = require('axios')
 
 const CreateProfile = () => {
-  const [readSite, setReadsite] = useState(true)
-  const [deleteContact, setDeleteContact] = useState(true)
-  const [createContact, setCreateContact] = useState(true)
-  const [modifyContact, setModifyContact] = useState(true)
+  const [readSite] = useState(true)
+  const [deleteContact] = useState(true)
+  const [createContact] = useState(true)
+  const [modifyContact] = useState(true)
   const [name, setName] = useState('')
   const account = JSON.parse(sessionStorage.getItem('account'))
   let history = useHistory()

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import {
@@ -46,7 +46,7 @@ const CreateSite = () => {
         active: '1',
       })
       .then(function (response) {
-        if (response.status == 200) {
+        if (response.status === 200) {
           console.log(response.data)
           let site = response.data
 
@@ -86,7 +86,7 @@ const CreateSite = () => {
                     active: 1,
                   })
                   .then(function (response) {
-                    if (response.status == 200) {
+                    if (response.status === 200) {
                       history.push('/dashboard/site/manage')
                     }
                   })

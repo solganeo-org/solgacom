@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import * as serviceWorker from '../../../serviceWorker'
 
 import {
   CButton,
@@ -23,6 +22,7 @@ function Solganeo() {
 
   function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
+    // eslint-disable-next-line no-useless-escape
     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
 
     const rawData = window.atob(base64)
@@ -86,7 +86,7 @@ function Solganeo() {
       let userPermission = askUserPermission()
 
       userPermission.then((permission) => {
-        if (permission == 'granted') {
+        if (permission === 'granted') {
           // 3.     Register a service worker
           registerServiceWorker()
             .then(function (registration) {

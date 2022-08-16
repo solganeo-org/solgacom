@@ -33,7 +33,7 @@ const AppHeader = () => {
 
   // Find site
   function findElement(arr, propName, propValue) {
-    for (var i = 0; i < arr.length; i++) if (arr[i][propName] == propValue) return arr[i]
+    for (var i = 0; i < arr.length; i++) if (arr[i][propName] === propValue) return arr[i]
   }
 
   // Handle on Change Input
@@ -65,7 +65,7 @@ const AppHeader = () => {
   useEffect(() => {
     if (sessionStorage.getItem('currentSite')) {
       if (
-        sessionStorage.getItem('currentSite') == 'undefined' ||
+        sessionStorage.getItem('currentSite') === 'undefined' ||
         sessionStorage.getItem('currentSite') == null
       ) {
         setApplication('')
@@ -80,6 +80,7 @@ const AppHeader = () => {
       .then((resp) => {
         resp.data.forEach((site) => handleAddNewSite(site))
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // <-- empty dependency array
 
   return (
