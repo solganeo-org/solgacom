@@ -98,6 +98,19 @@ const _nav = [
     to: '/dashboard/profile/manage',
     icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
   },
+
+  {
+    _component: 'CNavTitle',
+    anchor: 'Solganeo',
+  },
+
+  {
+    _component: 'CNavItem',
+    as: NavLink,
+    anchor: 'Subscribe',
+    to: '/dashboard/solganeo/subscribe',
+    icon: <CIcon name="cil-drop" customClassName="nav-icon" />,
+  },
 ]
 
 // const _nav = [
