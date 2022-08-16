@@ -21,6 +21,9 @@ const Profiles = React.lazy(() => import('./views/theme/profile/CreateProfile'))
 const CreateProfile = React.lazy(() => import('./views/theme/profile/CreateProfile'))
 const ManageProfile = React.lazy(() => import('./views/theme/profile/ManageProfile'))
 
+const Solganeo = React.lazy(() => import('./views/theme/solganeo/Solganeo'))
+const Subscribe = React.lazy(() => import('./views/theme/solganeo/Solganeo'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
@@ -67,6 +70,13 @@ const routes = [
     path: '/dashboard/profile/manage',
     name: 'Manage Profile',
     component: ManageProfile,
+    exact: true,
+  },
+  { path: '/dashboard/solganeo', name: 'Solganeo', component: Solganeo, exact: true },
+  {
+    path: '/dashboard/solganeo/subscribe',
+    name: 'Solganeo Subscribe',
+    component: Subscribe,
     exact: true,
   },
 ]
