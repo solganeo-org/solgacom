@@ -118,7 +118,7 @@ const ManageNotification = () => {
       })
   }
 
-  if (currentSite != undefined) {
+  if (currentSite !== undefined) {
     return (
       <>
         <CCard className="mb-4">

@@ -13,7 +13,6 @@ import {
   CInputGroup,
   CFormControl,
 } from '@coreui/react'
-import AmazonS3Connection from 'src/js/amazonS3'
 
 const axios = require('axios')
 
@@ -24,7 +23,7 @@ const Notification = () => {
   const [urlButton, seturlButton] = useState('')
   const [urlRed, setUrlRed] = useState('')
   const [urlImage, setUrlImage] = useState('')
-  const [customer, setCustomer] = useState([])
+  const [, setCustomer] = useState([])
   const contact = JSON.parse(sessionStorage.getItem('contact'))
   const site = JSON.parse(sessionStorage.getItem('currentSite'))
   let history = useHistory()
@@ -50,6 +49,7 @@ const Notification = () => {
           }
         })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // On click button Send

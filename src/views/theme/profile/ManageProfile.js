@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -7,16 +8,11 @@ import Typography from '@material-ui/core/Typography'
 
 import { CCard, CCardHeader, CCardBody } from '@coreui/react'
 
-import Code from '../../modals/Code.js'
-
 const axios = require('axios')
 
 const ManageProfile = () => {
   const account = JSON.parse(sessionStorage.getItem('account'))
   const [profiles, setProfiles] = useState([])
-  const [show, setShow] = useState(false)
-
-  const handleShow = () => setShow(true)
 
   const handleAddNewProfile = (profile) => {
     setProfiles((profiles) => [

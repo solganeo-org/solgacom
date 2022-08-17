@@ -65,6 +65,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "postcss-custom-properties": "^12.1.8",
     "prettier": "^2.3.2",
     "react-scripts": "^4.0.3",
     "sass": "^1.43.2"
@@ -90,7 +91,10 @@
     ]
   },
   "engines": {
-    "node": "14.13.x",
-    "npm": ">=6"
+    "node": "16.13.2",
+    "npm": "8.1.2"
+  },
+  "resolutions": {
+    "react-scripts/postcss-preset-env/postcss-custom-properties": "^10.0.0"
   }
 }

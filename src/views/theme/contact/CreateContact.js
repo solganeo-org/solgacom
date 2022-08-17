@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -19,7 +20,6 @@ import {
   CAlert,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { IoTThingsGraph } from 'aws-sdk'
 
 const axios = require('axios')
 const dateFormat = require('dateformat')
@@ -70,10 +70,6 @@ const CreateContact = () => {
         active: profile.active,
       },
     ])
-  }
-
-  const setPID = (index) => {
-    setIdProfile({ id_profile: index })
   }
 
   const handleSubmit = (e) => {

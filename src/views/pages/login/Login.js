@@ -82,7 +82,7 @@ const Login = () => {
                   <CForm onSubmit={(e) => handleLogin(e)}>
                     <CRow>
                       <CCol>
-                        <img src={logoSolganeo} height={35} />
+                        <img alt="Logo-Solganeo" src={logoSolganeo} height={35} />
                       </CCol>
                       <CCol>
                         <h1>Login</h1>
