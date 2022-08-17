@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable eqeqeq */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import ValidateForm from './../../../js/ValidateForm'
+import ValidateForm from '../../../js/ValidateForm'
 import {
   CButton,
   CCard,
@@ -23,28 +24,54 @@ import CIcon from '@coreui/icons-react'
 const axios = require('axios')
 const dateFormat = require('dateformat')
 
-const Register = () => {
-  // Define variables
-
+const CreateContact = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
-  const [societyName, setSocietyName] = useState('')
-  const [siret, setSiret] = useState('')
   const [functionName, setFunctionName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState()
-  const [employeesNumber, setEmployeesNumber] = useState('')
-  const [country, setCountry] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [alertEmailMessage, setAlertEmailMessage] = useState('')
+  const [id_profile, setIdProfile] = useState('')
   const [showAlertEmailMessage, setShowAlertEmailMessage] = useState(false)
   const [alertPasswordMessage, setAlertPasswordMessage] = useState('')
   const [showAlertPasswordMessage, setShowAlertPasswordMessage] = useState(false)
+  const account = JSON.parse(sessionStorage.getItem('account'))
+  const [profiles, setProfile] = useState([])
 
   let history = useHistory()
 
   // Register Action
+
+  useEffect((index) => {
+    // Read all Sites visibles from this account
+    axios
+      .get(process.env.REACT_APP_ENDPOINT + '/api/profiles/account-id/' + account.id)
+      .then((resp) => {
+        resp.data.forEach((profile) => {
+          handleAddNewProfile(profile)
+          console.log(id_profile)
+        })
+      })
+  }, []) // <-- empty dependency array
+
+  const handleAddNewProfile = (profile) => {
+    setProfile((profiles) => [
+      ...profiles,
+      {
+        id: profile.id,
+        name: profile.name,
+        id_account: profile.id_account,
+        read_site: profile.read_site,
+        create_contact: profile.create_contact,
+        modify_contact: profile.modify_contact,
+        delete_contact: profile.delete_contact,
+        active: profile.active,
+      },
+    ])
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -66,52 +93,27 @@ const Register = () => {
       }
     } else {
       axios
-        .post(process.env.REACT_APP_ENDPOINT + '/api/accounts', {
-          nb_employees: employeesNumber,
-          society_name: societyName,
-          siret: siret,
-          country: country,
-          phone_number: phoneNumber,
+        .post(process.env.REACT_APP_ENDPOINT + '/api/contacts', {
+          first_name: firstName,
+          last_name: lastName,
+          username: email,
+          password: password,
           email: email,
+          fonction: functionName,
           icon_path: '',
+          id_account: account.id,
+          id_profile: id_profile,
+          last_modification: dateFormat(new Date(), 'isoDateTime'),
           active: 1,
         })
         .then(function (response) {
           if (response.status == 200) {
-            let dataAccount = response.data
-
-            axios
-              .post(process.env.REACT_APP_ENDPOINT + '/api/contacts', {
-                first_name: firstName,
-                last_name: lastName,
-                username: email,
-                password: password,
-                email: email,
-                fonction: functionName,
-                icon_path: '',
-                id_account: dataAccount.data,
-                last_modification: dateFormat(new Date(), 'isoDateTime'),
-                active: 1,
-              })
-              .then(function (response) {
-                if (response.status == 200) {
-                  axios.post(process.env.REACT_APP_ENDPOINT + '/api/profiles', {
-                    name: 'Admin',
-                    delete_contact: '1',
-                    create_contact: '1',
-                    modify_contact: '1',
-                    read_site: '1',
-                    id_account: dataAccount.data,
-                    active: '1',
-                  })
-
-                  history.push('/')
-                }
-              })
+            history.push('/dashboard/contact/manage')
           }
         })
     }
   }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -119,8 +121,8 @@ const Register = () => {
           <CCol md="9" lg="7" xl="6">
             <CCard className="mx-4 my-5">
               <CCardBody className="p-4">
-                <CForm onSubmit={handleSubmit}>
-                  <h1 className="display-5 text-center">Register</h1>
+                <CForm onSubmit={(e) => handleSubmit(e)}>
+                  <h1 className="display-5 text-center">Create Contact</h1>
                   <hr></hr>
                   <CRow className="mb-3">
                     <CCol>
@@ -169,37 +171,6 @@ const Register = () => {
                   ) : null}
 
                   <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon name="cil-user" />
-                    </CInputGroupText>
-
-                    <CFormControl
-                      placeholder="Society Name"
-                      autoComplete="societyname"
-                      onChange={(e) => setSocietyName(e.target.value)}
-                      required
-                    ></CFormControl>
-                  </CInputGroup>
-
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon name="cil-user" />
-                    </CInputGroupText>
-
-                    <CFormControl
-                      placeholder="SIRET"
-                      autoComplete="siret"
-                      onChange={(e) => setSiret(e.target.value)}
-                      required
-                      minLength="14"
-                    ></CFormControl>
-                  </CInputGroup>
-
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon name="cil-list" />
-                    </CInputGroupText>
-
                     <CFormControl
                       placeholder="Function"
                       autoComplete="function"
@@ -230,36 +201,18 @@ const Register = () => {
 
                     <CFormSelect
                       aria-label="Default select example"
-                      onChange={(e) => setEmployeesNumber(e.target.value)}
-                      required
+                      boxShadow={0}
+                      onChange={(e) => setIdProfile(e.target.value)}
                     >
-                      <option>Employees </option>
-
-                      <option value="1 - 10">1 - 10</option>
-
-                      <option value="11 - 20">11 - 20</option>
-
-                      <option value="21 - 99">21 - 99</option>
-
-                      <option value="100 - 499">100 - 499</option>
-
-                      <option value="500 - 1999">500 - 1999</option>
-
-                      <option value="2000">More than 2000</option>
+                      <option>Profiles</option>
+                      {profiles.map(function (profile) {
+                        return (
+                          <option value={profile.id} key={profile.id}>
+                            {profile.name}
+                          </option>
+                        )
+                      })}
                     </CFormSelect>
-                  </CInputGroup>
-
-                  <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon name="cil-user" />
-                    </CInputGroupText>
-
-                    <CFormControl
-                      placeholder="Country"
-                      autoComplete="country"
-                      onChange={(e) => setCountry(e.target.value)}
-                      required
-                    ></CFormControl>
                   </CInputGroup>
 
                   <CInputGroup className="mb-3">
@@ -272,7 +225,7 @@ const Register = () => {
                       autoComplete="new-password"
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      minlength="8"
+                      minLength="8"
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -293,7 +246,7 @@ const Register = () => {
 
                   <div className="text-center">
                     <CButton type="submit" color="primary">
-                      Create Account
+                      Create Contact
                     </CButton>
                   </div>
                 </CForm>
@@ -306,4 +259,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default CreateContact

@@ -10,8 +10,6 @@ import {
   CCreateNavItem,
 } from '@coreui/react'
 
-import CIcon from '@coreui/icons-react'
-
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
 
@@ -35,8 +33,8 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <img className="sidebar-brand-full" src={logoSolganeo} height={35} />
-        <img className="sidebar-brand-narrow" src={logoSolganeo} height={35} />
+        <img alt="Logo-Solganeo" className="sidebar-brand-full" src={logoSolganeo} height={35} />
+        <img alt="Logo-Solganeo" className="sidebar-brand-narrow" src={logoSolganeo} height={35} />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>

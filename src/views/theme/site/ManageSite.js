@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -43,13 +44,36 @@ const ManageSite = () => {
   }
 
   useEffect(() => {
-    // Read all SItes visibles from this account
+    console.log(contact)
+    // Read all Sites visibles from this account
     axios
-      .get(process.env.REACT_APP_ENDPOINT + '/api/sites-contacts/account-id/' + contact.id)
+      .get(process.env.REACT_APP_ENDPOINT + '/api/sites-rules/contact-id/' + contact.id)
       .then((resp) => {
-        resp.data.forEach((site) => handleAddNewSite(site))
+        console.log(resp)
+        resp.data.forEach((site) => {
+          console.log(contact)
+          handleAddNewSite(site)
+        })
       })
   }, []) // <-- empty dependency array
+
+  const deleteSite = (e, index) => {
+    e.preventDefault()
+    axios
+      .delete(process.env.REACT_APP_ENDPOINT + '/api/sites-rules/delete/' + sites[index].id)
+      .then(function (response) {
+        if (response.status === 200) {
+          axios
+            .delete(process.env.REACT_APP_ENDPOINT + '/api/sites/delete/' + sites[index].id)
+            .then((response) => {
+              if (response.status === 200) {
+                window.location.reload()
+              }
+            })
+        }
+      })
+  }
+
   return (
     <>
       <CCard className="mb-4">
@@ -59,20 +83,20 @@ const ManageSite = () => {
           </Typography>
         </CCardHeader>
         <CCardBody>
-          {sites.map(function (name, index) {
+          {sites.map(function (site, index) {
             return (
               <Card boxShadow={0} key={index} className="my-2">
                 <CardContent>
                   <Typography variant="h6" color="textSecondary">
-                    {name.name}
+                    {site.name}
                   </Typography>
                   <Typography variant="subtitle2" color="textSecondary">
-                    {name.url}
+                    {site.url}
                   </Typography>
                   <Typography variant="subtitle2" color="textSecondary">
-                    {name.domain}
+                    {site.domain}
                   </Typography>
-                  <Typography color="textSecondary">{name.icon_path}</Typography>
+                  <Typography color="textSecondary">{site.icon_path}</Typography>
                 </CardContent>
                 <CardActions>
                   <Button size="small" color="primary">
@@ -81,10 +105,13 @@ const ManageSite = () => {
                   <Button
                     size="small"
                     color="primary"
-                    url_amazon={name.url_amazon}
+                    url_amazon={site.url_amazon}
                     onClick={handleSeeCode}
                   >
                     See Code
+                  </Button>
+                  <Button size="small" color="primary" onClick={(e) => deleteSite(e, index)}>
+                    Delete
                   </Button>
                 </CardActions>
               </Card>

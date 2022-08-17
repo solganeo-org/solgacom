@@ -29,14 +29,16 @@ const WidgetsBrand = lazy(() => import('../components/widgets/WidgetsBrand.js'))
 const Dashboard = () => {
   let history = useHistory()
   useEffect(() => {
-    if (!sessionStorage.getItem('user')) history.push('/')
+    if (!sessionStorage.getItem('contact')) history.push('/')
     else {
-      console.log('User: ' + sessionStorage.getItem('user'))
+      /* console.log('User: ' + sessionStorage.getItem('user'))
       console.log('Contact: ' + sessionStorage.getItem('contact'))
       console.log('Account: ' + sessionStorage.getItem('account'))
-      console.log('Profile: ' + sessionStorage.getItem('profile'))
+      console.log('Profile: ' + sessionStorage.getItem('profile')) */
+
+      console.log(sessionStorage)
     }
-  }, [])
+  }, [history])
 
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)

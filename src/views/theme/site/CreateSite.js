@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   CListGroup,
@@ -23,7 +24,7 @@ const CreateSite = () => {
   const [url, setURL] = useState('')
   const [domain, setDomain] = useState('')
   const contact = JSON.parse(sessionStorage.getItem('contact'))
-
+  let history = useHistory()
   const createSite = (e) => {
     e.preventDefault()
     // Generate VAPID KEYS
@@ -45,7 +46,8 @@ const CreateSite = () => {
         active: '1',
       })
       .then(function (response) {
-        if (response.status == 200) {
+        if (response.status === 200) {
+          console.log(response.data)
           let site = response.data
 
           let data = {
@@ -56,6 +58,7 @@ const CreateSite = () => {
 
           AmazonS3Connection.upload('webpush_' + newId + '.js', data, function (url_amazon) {
             console.log(url_amazon)
+            console.log(site.data)
             console.log(process.env.REACT_APP_ENDPOINT + '/api/sites/' + site.data)
 
             axios
@@ -72,14 +75,19 @@ const CreateSite = () => {
               .then(function (response) {
                 // Add Contact as Creator
                 axios
-                  .post(process.env.REACT_APP_ENDPOINT + '/api/sites-contacts', {
-                    id_site: site.data,
+                  .post(process.env.REACT_APP_ENDPOINT + '/api/sites-rules', {
+                    name: 'Owner',
+                    modify_site: '1',
+                    create_site: '1',
+                    delete_site: '1',
+                    read_dashboard: '1',
                     id_contact: contact.id,
+                    id_site: site.data,
                     active: 1,
                   })
                   .then(function (response) {
-                    if (response.status == 200) {
-                      window.location.reload()
+                    if (response.status === 200) {
+                      history.push('/dashboard/site/manage')
                     }
                   })
               })
