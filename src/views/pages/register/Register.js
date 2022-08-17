@@ -178,7 +178,6 @@ const Register = () => {
                       autoComplete="societyname"
                       onChange={(e) => setSocietyName(e.target.value)}
                       required
-                      maxLength="3"
                     ></CFormControl>
                   </CInputGroup>
 
@@ -208,6 +207,7 @@ const Register = () => {
                       onChange={(e) => setFunctionName(e.target.value)}
                       required
                       minLength="3"
+                      maxLength="3"
                     ></CFormControl>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -262,6 +262,7 @@ const Register = () => {
                       autoComplete="country"
                       onChange={(e) => setCountry(e.target.value)}
                       required
+                      minLength="2"
                       maxLength="2"
                     ></CFormControl>
                   </CInputGroup>
