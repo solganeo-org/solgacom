@@ -104,7 +104,7 @@ const Register = () => {
                     id_account: dataAccount.data,
                     active: '1',
                   })
-
+                  console.log(ValidateForm.validatePassword(password, confirmPassword))
                   history.push('/')
                 }
               })
@@ -178,6 +178,7 @@ const Register = () => {
                       autoComplete="societyname"
                       onChange={(e) => setSocietyName(e.target.value)}
                       required
+                      maxLength="3"
                     ></CFormControl>
                   </CInputGroup>
 
@@ -192,6 +193,7 @@ const Register = () => {
                       onChange={(e) => setSiret(e.target.value)}
                       required
                       minLength="14"
+                      maxLength="14"
                     ></CFormControl>
                   </CInputGroup>
 
@@ -205,6 +207,7 @@ const Register = () => {
                       autoComplete="function"
                       onChange={(e) => setFunctionName(e.target.value)}
                       required
+                      minLength="3"
                     ></CFormControl>
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -259,6 +262,7 @@ const Register = () => {
                       autoComplete="country"
                       onChange={(e) => setCountry(e.target.value)}
                       required
+                      maxLength="2"
                     ></CFormControl>
                   </CInputGroup>
 
@@ -285,6 +289,7 @@ const Register = () => {
                       autoComplete="new-password"
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
+                      minlength="8"
                     />
                   </CInputGroup>
                   {showAlertPasswordMessage ? (
