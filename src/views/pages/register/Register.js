@@ -90,21 +90,12 @@ const Register = () => {
                 fonction: functionName,
                 icon_path: '',
                 id_account: dataAccount.data,
+                id_profile: 1,
                 last_modification: dateFormat(new Date(), 'isoDateTime'),
                 active: 1,
               })
               .then(function (response) {
                 if (response.status == 200) {
-                  axios.post(process.env.REACT_APP_ENDPOINT + '/api/profiles', {
-                    name: 'Admin',
-                    delete_contact: '1',
-                    create_contact: '1',
-                    modify_contact: '1',
-                    read_site: '1',
-                    id_account: dataAccount.data,
-                    active: '1',
-                  })
-                  console.log(ValidateForm.validatePassword(password, confirmPassword))
                   history.push('/')
                 }
               })
