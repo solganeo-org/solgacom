@@ -69,11 +69,13 @@ function Solganeo() {
   }
 
   const isPushNotificationSupported = () => {
+    console.log('Application is supported')
     return 'serviceWorker' in navigator && 'PushManager' in window
   }
 
   const registerServiceWorker = () => {
-    return navigator.serviceWorker.register('sw.js')
+    console.log('is supported')
+    return navigator.serviceWorker.register('./sw.js')
   }
 
   const askUserPermission = async () => {
@@ -87,10 +89,13 @@ function Solganeo() {
       let userPermission = askUserPermission()
 
       userPermission.then((permission) => {
+        console.log(permission)
         if (permission === 'granted') {
+          console.log('Permission Granted')
           // 3.     Register a service worker
           registerServiceWorker()
             .then(function (registration) {
+              console.log('Registering ServiceWorker')
               navigator.serviceWorker.ready.then(function (registration) {
                 registration.pushManager
                   .subscribe({
@@ -108,6 +113,7 @@ function Solganeo() {
             })
             .catch(function (err) {
               console.log(err)
+              console.log('no register')
             })
         }
       })
