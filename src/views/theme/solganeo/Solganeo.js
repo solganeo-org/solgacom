@@ -84,7 +84,10 @@ function Solganeo() {
     if (isPushNotificationSupported()) {
       // 2.     Ask the user permission
       let userPermission = askUserPermission()
-
+      console.log(navigator.userAgentData.mobile)
+      //2.b Check if navigator is a mobile
+      if (navigator.userAgentData.mobile) {
+      }
       userPermission.then((permission) => {
         if (permission === 'granted') {
           // 3.     Register a service worker

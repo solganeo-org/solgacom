@@ -1,11 +1,14 @@
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('install', function (e) {
   console.log('sw installation done')
 })
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('activate', function (e) {
   console.log('sw activatation done')
 })
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener('push', function (e) {
   console.log('Omar push received')
   var obj = JSON.parse(e.data.text()) // this is how you parse a string into JSON
@@ -16,7 +19,13 @@ self.addEventListener('push', function (e) {
     actions: [
       {
         action: obj.actionName,
-        icon: obj.icon,
+        _icon: obj.icon,
+        get icon() {
+          return this._icon
+        },
+        set icon(value) {
+          this._icon = value
+        },
         title: obj.actiontitle,
       },
     ],
