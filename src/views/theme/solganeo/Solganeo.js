@@ -92,34 +92,32 @@ function Solganeo() {
         console.log(permission)
         if (permission === 'granted') {
           console.log('Permission Granted')
-          registerServiceWorker()
-          console.log(navigator.serviceWorker.getRegistration)
           if ('serviceWorker' in navigator) {
             console.log('serviceWorkerinstalled')
-          }
-          // 3.     Register a service worker
-          registerServiceWorker()
-            .then(function (registration) {
-              console.log('Registering ServiceWorker')
-              navigator.serviceWorker.ready.then(function (registration) {
-                registration.pushManager
-                  .subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlB64ToUint8Array(
-                      'BNrknLI66MNnJC5gFrzOOuDKGeK5K3S2jzRSOHeSPqIVqwIzVwjRbNvGbfsBfXc_Yvcgxf5eMTz9P2WcgGXgEws',
-                    ),
-                  })
-                  .then(function (pushSubscription) {
-                    console.log(pushSubscription)
-                    let pushSubscriptionObject = pushSubscription.toJSON()
-                    subscribe(pushSubscriptionObject)
-                  })
+            // 3.     Register a service worker
+            registerServiceWorker()
+              .then(function (_registration) {
+                console.log('Registering ServiceWorker')
+                navigator.serviceWorker.ready.then(function (registration) {
+                  registration.pushManager
+                    .subscribe({
+                      userVisibleOnly: true,
+                      applicationServerKey: urlB64ToUint8Array(
+                        'BNrknLI66MNnJC5gFrzOOuDKGeK5K3S2jzRSOHeSPqIVqwIzVwjRbNvGbfsBfXc_Yvcgxf5eMTz9P2WcgGXgEws',
+                      ),
+                    })
+                    .then(function (pushSubscription) {
+                      console.log(pushSubscription)
+                      let pushSubscriptionObject = pushSubscription.toJSON()
+                      subscribe(pushSubscriptionObject)
+                    })
+                })
               })
-            })
-            .catch(function (err) {
-              console.log(err)
-              console.log('no register')
-            })
+              .catch(function (err) {
+                console.log(err)
+                console.log('no register')
+              })
+          }
         }
       })
     } else {
