@@ -55,6 +55,7 @@ function Solganeo() {
   }
 
   const subscribe = (pushSubscriptionObject) => {
+    console.log(navigator.userAgentData.brands)
     console.log(pushSubscriptionObject)
 
     axios
@@ -72,7 +73,7 @@ function Solganeo() {
   }
 
   const registerServiceWorker = () => {
-    return navigator.serviceWorker.register('./sw.js')
+    return navigator.serviceWorker.register('sw.js')
   }
 
   const askUserPermission = async () => {
