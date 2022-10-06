@@ -55,6 +55,7 @@ function Solganeo() {
   }
 
   const subscribe = (pushSubscriptionObject) => {
+    console.log(navigator.userAgentData.moblie)
     console.log(pushSubscriptionObject)
 
     axios
