@@ -92,7 +92,11 @@ function Solganeo() {
         console.log(permission)
         if (permission === 'granted') {
           console.log('Permission Granted')
+          registerServiceWorker()
           console.log(navigator.serviceWorker.getRegistration)
+          if ('serviceWorker' in navigator) {
+            console.log('serviceWorkerinstalled')
+          }
           // 3.     Register a service worker
           registerServiceWorker()
             .then(function (registration) {
