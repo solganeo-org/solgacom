@@ -68,13 +68,15 @@ function Solganeo() {
       })
   }
 
+  const isTheBrowserIsSafari = () => {
+    console.log(navigator.userAgentData.brands)
+  }
+
   const isPushNotificationSupported = () => {
-    console.log('Application is supported')
     return 'serviceWorker' in navigator && 'PushManager' in window
   }
 
   const registerServiceWorker = () => {
-    console.log('is supported')
     return navigator.serviceWorker.register('./sw.js')
   }
 
@@ -87,6 +89,7 @@ function Solganeo() {
     if (isPushNotificationSupported()) {
       // 2.     Ask the user permission
       let userPermission = askUserPermission()
+      isTheBrowserIsSafari()
 
       userPermission.then((permission) => {
         console.log(permission)
@@ -115,7 +118,6 @@ function Solganeo() {
               })
               .catch(function (err) {
                 console.log(err)
-                console.log('no register')
               })
           }
         }
