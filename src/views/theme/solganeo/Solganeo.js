@@ -123,6 +123,7 @@ function Solganeo() {
         }
       })
     } else {
+      isTheBrowserIsSafari()
       console.log('Push SUbscription Notifications are not supported by the navigator :(')
     }
     //4.      (Optionally) Create a notification subscription
