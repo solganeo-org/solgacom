@@ -69,7 +69,7 @@ function Solganeo() {
   }
 
   const isTheBrowserIsSafari = () => {
-    console.log(navigator.userAgentData.brands)
+    return 'safari' in window && 'pushNotification' in window.safari
   }
 
   const isPushNotificationSupported = () => {
