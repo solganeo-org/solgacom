@@ -38,6 +38,24 @@ function Solganeo() {
     setVisibleRequestModal(true)
   }
 
+  const checkRemotePermission = function (permissionData) {
+    if (permissionData.permission === 'default') {
+      // This is a new web service URL and its validity is unknown.
+      window.safari.pushNotification.requestPermission(
+        'https://solganeo-api.herokuapp.com/', // The web service URL.
+        'web.com.example.domain', // The Website Push ID.
+        {}, // Data that you choose to send to your server to help you identify the user.
+        checkRemotePermission, // The callback function.
+      )
+    } else if (permissionData.permission === 'denied') {
+      console.log('clients said no')
+    } else if (permissionData.permission === 'granted') {
+      // The web service URL is a valid push provider, and the user said yes.
+      // permissionData.deviceToken is now available to use.
+      console.log('clients said yes')
+    }
+  }
+
   const handleClose = (e, modalName) => {
     switch (modalName) {
       case 'request':
@@ -73,7 +91,11 @@ function Solganeo() {
   }
 
   const isPushNotificationSupported = () => {
-    return 'serviceWorker' in navigator && 'PushManager' in window
+    return (
+      // eslint-disable-next-line prettier/prettier
+      ('serviceWorker' in navigator && 'PushManager' in window) ||
+      'pushNotification' in window.safari
+    )
   }
 
   const registerServiceWorker = () => {
@@ -89,9 +111,10 @@ function Solganeo() {
     if (isPushNotificationSupported()) {
       // 2.     Ask the user permission
       let userPermission = askUserPermission()
-      isTheBrowserIsSafari()
-
-      userPermission.then((permission) => {
+      console.log(isTheBrowserIsSafari())
+      var permissionN = Notification.permission
+      console.log(Notification.permission)
+      userPermission.then((permission = permissionN) => {
         console.log(permission)
         if (permission === 'granted') {
           console.log('Permission Granted')
@@ -101,19 +124,35 @@ function Solganeo() {
             registerServiceWorker()
               .then(function (_registration) {
                 console.log('Registering ServiceWorker')
+                console.log()
                 navigator.serviceWorker.ready.then(function (registration) {
-                  registration.pushManager
-                    .subscribe({
-                      userVisibleOnly: true,
-                      applicationServerKey: urlB64ToUint8Array(
-                        'BNrknLI66MNnJC5gFrzOOuDKGeK5K3S2jzRSOHeSPqIVqwIzVwjRbNvGbfsBfXc_Yvcgxf5eMTz9P2WcgGXgEws',
-                      ),
-                    })
-                    .then(function (pushSubscription) {
-                      console.log(pushSubscription)
-                      let pushSubscriptionObject = pushSubscription.toJSON()
-                      subscribe(pushSubscriptionObject)
-                    })
+                  if (isTheBrowserIsSafari()) {
+                    registration.pushNotification
+                      .subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlB64ToUint8Array(
+                          'BNrknLI66MNnJC5gFrzOOuDKGeK5K3S2jzRSOHeSPqIVqwIzVwjRbNvGbfsBfXc_Yvcgxf5eMTz9P2WcgGXgEws',
+                        ),
+                      })
+                      .then(function (pushSubscription) {
+                        console.log(pushSubscription)
+                        let pushSubscriptionObject = pushSubscription.toJSON()
+                        subscribe(pushSubscriptionObject)
+                      })
+                  } else {
+                    registration.pushManager
+                      .subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlB64ToUint8Array(
+                          'BNrknLI66MNnJC5gFrzOOuDKGeK5K3S2jzRSOHeSPqIVqwIzVwjRbNvGbfsBfXc_Yvcgxf5eMTz9P2WcgGXgEws',
+                        ),
+                      })
+                      .then(function (pushSubscription) {
+                        console.log(pushSubscription)
+                        let pushSubscriptionObject = pushSubscription.toJSON()
+                        subscribe(pushSubscriptionObject)
+                      })
+                  }
                 })
               })
               .catch(function (err) {
@@ -121,10 +160,15 @@ function Solganeo() {
               })
           }
         }
+        console.log('no granted')
       })
     } else {
-      isTheBrowserIsSafari()
-      console.log('Push SUbscription Notifications are not supported by the navigator :(')
+      if (isTheBrowserIsSafari() && isPushNotificationSupported()) {
+        var permissionData = window.safari.pushNotification.permission('solgacom.herokuapp.com')
+        checkRemotePermission(permissionData)
+      } else {
+        console.log('Push SUbscription Notifications are not supported by the navigator :(')
+      }
     }
     //4.      (Optionally) Create a notification subscription
     //5.      (Optionally) Send the subscription to a Push Server
